@@ -614,4 +614,124 @@ describe('Select 컴포넌트', () => {
       expect(select).toBeTruthy();
     });
   });
+
+  // ========================================
+  // searchable 모드 (engine-v1.40.0+)
+  // ========================================
+  describe('searchable 모드', () => {
+    const timezoneOptions = [
+      { value: 'Asia/Seoul', label: '(UTC+09:00) Asia/Seoul' },
+      { value: 'Asia/Tokyo', label: '(UTC+09:00) Asia/Tokyo' },
+      { value: 'America/New_York', label: '(UTC-05:00) America/New_York' },
+      { value: 'Europe/London', label: '(UTC+00:00) Europe/London' },
+      { value: 'Pacific/Auckland', label: '(UTC+13:00) Pacific/Auckland' },
+    ];
+
+    it('searchable=false 기본값에서는 검색 input이 렌더링되지 않는다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} />);
+      fireEvent.click(screen.getByRole('button'));
+      expect(screen.queryByRole('searchbox')).toBeNull();
+    });
+
+    it('searchable=true 시 드롭다운 내 검색 input이 렌더링된다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} searchable />);
+      fireEvent.click(screen.getByRole('button'));
+      expect(screen.getByRole('searchbox')).toBeTruthy();
+    });
+
+    it('searchPlaceholder가 input placeholder로 적용된다', () => {
+      render(
+        <Select
+          options={timezoneOptions}
+          value="Asia/Seoul"
+          onChange={() => {}}
+          searchable
+          searchPlaceholder="타임존 검색..."
+        />
+      );
+      fireEvent.click(screen.getByRole('button'));
+      const input = screen.getByRole('searchbox') as HTMLInputElement;
+      expect(input.placeholder).toBe('타임존 검색...');
+    });
+
+    it('검색어 입력 시 라벨 기준으로 옵션이 필터링된다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} searchable />);
+      fireEvent.click(screen.getByRole('button'));
+
+      const input = screen.getByRole('searchbox');
+      fireEvent.change(input, { target: { value: 'tokyo' } });
+
+      const visibleOptions = screen.getAllByRole('option');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].textContent).toContain('Asia/Tokyo');
+    });
+
+    it('검색은 대소문자를 구분하지 않는다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} searchable />);
+      fireEvent.click(screen.getByRole('button'));
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'LONDON' } });
+
+      const visibleOptions = screen.getAllByRole('option');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].textContent).toContain('Europe/London');
+    });
+
+    it('value 문자열에 대해서도 검색된다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} searchable />);
+      fireEvent.click(screen.getByRole('button'));
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'pacific' } });
+
+      const visibleOptions = screen.getAllByRole('option');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].textContent).toContain('Pacific/Auckland');
+    });
+
+    it('검색 결과가 없으면 "No results" 메시지가 표시된다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} searchable />);
+      fireEvent.click(screen.getByRole('button'));
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'nonexistent-zzz' } });
+
+      expect(screen.queryAllByRole('option').length).toBe(0);
+      expect(screen.getByText('No results')).toBeTruthy();
+    });
+
+    it('필터된 옵션 선택 시 onChange가 호출되고 드롭다운이 닫힌다', () => {
+      const handleChange = vi.fn();
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={handleChange} searchable />);
+      fireEvent.click(screen.getByRole('button'));
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'tokyo' } });
+
+      const tokyoOption = screen.getAllByRole('option')[0];
+      fireEvent.click(tokyoOption);
+
+      expect(handleChange).toHaveBeenCalledTimes(1);
+      expect(handleChange).toHaveBeenCalledWith(
+        expect.objectContaining({ target: { value: 'Asia/Tokyo' } })
+      );
+      expect(screen.queryByRole('listbox')).toBeNull();
+    });
+
+    it('드롭다운을 다시 열면 검색어가 초기화된다', () => {
+      render(<Select options={timezoneOptions} value="Asia/Seoul" onChange={() => {}} searchable />);
+
+      // 첫 번째 열기 + 필터링
+      fireEvent.click(screen.getByRole('button'));
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'tokyo' } });
+      expect(screen.getAllByRole('option').length).toBe(1);
+
+      // 닫기 (외부 클릭 대신 ESC)
+      fireEvent.keyDown(document, { key: 'Escape' });
+      expect(screen.queryByRole('listbox')).toBeNull();
+
+      // 다시 열기 — 검색어가 초기화되어 모든 옵션이 보여야 함
+      fireEvent.click(screen.getByRole('button'));
+      expect(screen.getAllByRole('option').length).toBe(timezoneOptions.length);
+      const input = screen.getByRole('searchbox') as HTMLInputElement;
+      expect(input.value).toBe('');
+    });
+  });
 });

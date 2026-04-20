@@ -3,11 +3,11 @@
     "is_partial": true,
     "description": "메일 템플릿 미리보기 모달"
   },
-  "id": "modal_mail_template_preview",
+  "id": "modal_notification_template_preview",
   "type": "composite",
   "name": "Modal",
   "props": {
-    "title": "$t:admin.settings.mail_templates.preview_modal.title",
+    "title": "$t:admin.settings.notification_definitions.preview_modal.title",
     "size": "lg"
   },
   "children": [
@@ -32,7 +32,7 @@
               "props": {
                 "className": "text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               },
-              "text": "$t:admin.settings.mail_templates.preview_modal.subject_label"
+              "text": "$t:admin.settings.notification_definitions.preview_modal.subject_label"
             },
             {
               "type": "basic",
@@ -40,7 +40,7 @@
               "props": {
                 "className": "text-base font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900 rounded-md px-3 py-2"
               },
-              "text": "{{_local.previewData?.subject ?? ''}}"
+              "text": "{{$parent._local.previewData?.subject ?? ''}}"
             }
           ]
         },
@@ -57,14 +57,15 @@
               "props": {
                 "className": "text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               },
-              "text": "$t:admin.settings.mail_templates.preview_modal.body_label"
+              "text": "$t:admin.settings.notification_definitions.preview_modal.body_label"
             },
             {
-              "type": "basic",
-              "name": "Div",
+              "type": "composite",
+              "name": "HtmlContent",
               "props": {
-                "className": "border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden",
-                "dangerouslySetInnerHTML": "{{_local.previewData?.body ?? ''}}"
+                "content": "{{$parent._local.previewData?.body ?? ''}}",
+                "isHtml": true,
+                "className": "prose dark:prose-invert prose-sm max-w-none border border-gray-200 dark:border-gray-700 rounded-md p-4 max-h-[400px] overflow-y-auto bg-white dark:bg-gray-900"
               }
             }
           ]
@@ -89,7 +90,7 @@
                 {
                   "type": "click",
                   "handler": "closeModal",
-                  "target": "modal_mail_template_preview"
+                  "target": "modal_notification_template_preview"
                 }
               ]
             }
