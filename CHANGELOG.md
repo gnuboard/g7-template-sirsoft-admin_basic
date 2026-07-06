@@ -4,6 +4,12 @@
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르며,
 [Semantic Versioning](https://semver.org/lang/ko/)을 준수합니다.
 
+## [1.0.1] - 2026-07-06
+
+### Changed
+
+- 첨부파일을 허용 개수보다 많이 선택했을 때의 안내 문구를 "이미지는 최대 N장까지…"에서 "최대 N개까지 첨부할 수 있습니다"로 바꿔, 이미지뿐 아니라 문서 등 일반 파일을 올리는 화면에서도 자연스럽게 표시되도록 했습니다.
+
 ## [1.0.0] - 2026-07-01
 
 ### Added
