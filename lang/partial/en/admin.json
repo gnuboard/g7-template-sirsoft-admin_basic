@@ -1028,6 +1028,7 @@
     "page_description": "Manage roles and permissions.",
     "title": "Role Management",
     "description": "Manage roles and permissions.",
+    "refresh": "Refresh",
     "add_role": "Add Role",
     "search_placeholder": "Search roles...",
     "pagination_info": "Showing {{from}}-{{to}} of {{total}}",
