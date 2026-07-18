@@ -1435,7 +1435,18 @@
       "sitemap_gzip": "Sitemap 압축 (gzip)",
       "sitemap_gzip_desc": "나뉜 sitemap 파일을 압축해 전송량을 줄입니다. 색인 파일은 압축하지 않습니다.",
       "sitemap_hreflang_enabled": "다국어 대체 링크 (hreflang)",
-      "sitemap_hreflang_enabled_desc": "다국어 사이트에서 URL 마다 각 언어 버전을 가리키는 hreflang 대체 링크를 넣습니다. 끄면 링크를 생략해 sitemap 크기를 줄입니다."
+      "sitemap_hreflang_enabled_desc": "다국어 사이트에서 URL 마다 각 언어 버전을 가리키는 hreflang 대체 링크를 넣습니다. 끄면 링크를 생략해 sitemap 크기를 줄입니다.",
+      "sitemap_regenerating": "생성 중…",
+      "sitemap_progress": "생성 진행 상황",
+      "sitemap_status_queued": "대기 중",
+      "sitemap_status_running": "생성 중",
+      "sitemap_status_writing": "파일 작성 중",
+      "sitemap_status_completed": "완료",
+      "sitemap_status_failed": "실패",
+      "sitemap_progress_phase": "현재 처리 중: {{phase}}",
+      "sitemap_progress_urls": "누적 URL: {{count}}개",
+      "sitemap_realtime_connected": "실시간으로 연결되어 있습니다.",
+      "sitemap_polling": "진행 상황을 주기적으로 확인하고 있습니다."
     },
     "security": {
       "title": "보안 설정",
