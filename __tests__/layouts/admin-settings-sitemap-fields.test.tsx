@@ -77,16 +77,29 @@ describe('환경설정 > SEO 탭 > Sitemap 생성 칸', () => {
     expect(field.type).toBe('composite');
   });
 
+  it('hreflang 칸이 seo.sitemap_hreflang_enabled Toggle 로 존재한다', () => {
+    const field = findFieldByName(seoTab, 'seo.sitemap_hreflang_enabled');
+
+    expect(field).toBeDefined();
+    expect(field.name).toBe('Toggle');
+    expect(field.type).toBe('composite');
+  });
+
   it('신규 칸이 다국어 키로 라벨을 표시한다 (하드코딩 문구 없음)', () => {
     const urlsPerFileField = collectNodes(
       seoTab,
       (n) => n.id === 'field_sitemap_urls_per_file'
     )[0];
     const gzipField = collectNodes(seoTab, (n) => n.id === 'field_sitemap_gzip')[0];
+    const hreflangField = collectNodes(
+      seoTab,
+      (n) => n.id === 'field_sitemap_hreflang_enabled'
+    )[0];
 
     const labels = [
       ...collectNodes(urlsPerFileField, (n) => typeof n.text === 'string'),
       ...collectNodes(gzipField, (n) => typeof n.text === 'string'),
+      ...collectNodes(hreflangField, (n) => typeof n.text === 'string'),
     ].map((n) => n.text);
 
     expect(labels.length).toBeGreaterThan(0);

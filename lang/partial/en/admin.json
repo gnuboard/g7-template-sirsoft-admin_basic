@@ -1429,7 +1429,9 @@
       "sitemap_urls_per_file": "URLs per sitemap file",
       "sitemap_urls_per_file_hint": "When URLs exceed this number, the sitemap is split into multiple files and an index file is created — minimum 1000, maximum 50000 (search engine limit)",
       "sitemap_gzip": "Sitemap compression (gzip)",
-      "sitemap_gzip_desc": "Compresses split sitemap files to reduce transfer size. The index file is not compressed."
+      "sitemap_gzip_desc": "Compresses split sitemap files to reduce transfer size. The index file is not compressed.",
+      "sitemap_hreflang_enabled": "Multilingual alternate links (hreflang)",
+      "sitemap_hreflang_enabled_desc": "Adds hreflang alternate links pointing to each language version of a URL on multilingual sites. Turn off to omit the links and reduce sitemap size."
     },
     "security": {
       "title": "Security Settings",

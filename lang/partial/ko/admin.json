@@ -1433,7 +1433,9 @@
       "sitemap_urls_per_file": "Sitemap 파일당 URL 수",
       "sitemap_urls_per_file_hint": "URL 이 이 수를 넘으면 sitemap 파일이 여러 개로 나뉘고 색인 파일이 함께 만들어집니다 — 최소 1000개, 최대 50000개 (검색엔진 규격 상한)",
       "sitemap_gzip": "Sitemap 압축 (gzip)",
-      "sitemap_gzip_desc": "나뉜 sitemap 파일을 압축해 전송량을 줄입니다. 색인 파일은 압축하지 않습니다."
+      "sitemap_gzip_desc": "나뉜 sitemap 파일을 압축해 전송량을 줄입니다. 색인 파일은 압축하지 않습니다.",
+      "sitemap_hreflang_enabled": "다국어 대체 링크 (hreflang)",
+      "sitemap_hreflang_enabled_desc": "다국어 사이트에서 URL 마다 각 언어 버전을 가리키는 hreflang 대체 링크를 넣습니다. 끄면 링크를 생략해 sitemap 크기를 줄입니다."
     },
     "security": {
       "title": "보안 설정",
