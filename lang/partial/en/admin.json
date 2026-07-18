@@ -1423,9 +1423,13 @@
       "sitemap_cache_ttl_hint": "Leave empty to follow the sitemap cache TTL in Advanced settings. Enter a value to override it here — min 3600s (1 hour), max 604800s (7 days)",
       "sitemap_last_updated_at": "Last generated",
       "sitemap_manual_update": "Generate now",
-      "sitemap_updating": "Generating...",
-      "sitemap_update_success": "Sitemap generation completed.",
-      "sitemap_update_failed": "Sitemap generation failed."
+      "sitemap_updating": "Starting...",
+      "sitemap_update_success": "Sitemap regeneration has started. It may take a while to finish.",
+      "sitemap_update_failed": "Failed to start sitemap regeneration.",
+      "sitemap_urls_per_file": "URLs per sitemap file",
+      "sitemap_urls_per_file_hint": "When URLs exceed this number, the sitemap is split into multiple files and an index file is created — minimum 1000, maximum 50000 (search engine limit)",
+      "sitemap_gzip": "Sitemap compression (gzip)",
+      "sitemap_gzip_desc": "Compresses split sitemap files to reduce transfer size. The index file is not compressed."
     },
     "security": {
       "title": "Security Settings",
@@ -1732,7 +1736,9 @@
       "geoip_manual_update": "Update now",
       "geoip_updating": "Updating...",
       "geoip_update_success": "GeoIP DB update completed.",
-      "geoip_update_failed": "GeoIP DB update failed."
+      "geoip_update_failed": "GeoIP DB update failed.",
+      "seo_sitemap_cache": "Sitemap cache",
+      "seo_sitemap_cache_desc": "Caches sitemap.xml."
     },
     "notification_definitions": {
       "title": "Notification Settings",

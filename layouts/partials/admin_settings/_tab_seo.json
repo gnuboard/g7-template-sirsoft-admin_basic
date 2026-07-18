@@ -964,6 +964,81 @@
               ]
             },
             {
+              "id": "field_sitemap_urls_per_file",
+              "type": "basic",
+              "name": "Div",
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Label",
+                  "props": {
+                    "className": "form-label"
+                  },
+                  "text": "$t:admin.settings.seo.sitemap_urls_per_file"
+                },
+                {
+                  "type": "basic",
+                  "name": "Input",
+                  "props": {
+                    "type": "number",
+                    "name": "seo.sitemap_urls_per_file",
+                    "min": 1000,
+                    "max": 50000,
+                    "placeholder": "50000",
+                    "className": ""
+                  }
+                },
+                {
+                  "type": "basic",
+                  "name": "P",
+                  "props": {
+                    "className": "form-hint"
+                  },
+                  "text": "$t:admin.settings.seo.sitemap_urls_per_file_hint"
+                }
+              ]
+            },
+            {
+              "id": "field_sitemap_gzip",
+              "type": "basic",
+              "name": "Div",
+              "props": {
+                "className": "flex-between"
+              },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "props": {
+                        "className": "text-heading"
+                      },
+                      "text": "$t:admin.settings.seo.sitemap_gzip"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "P",
+                      "props": {
+                        "className": "text-label-subtle"
+                      },
+                      "text": "$t:admin.settings.seo.sitemap_gzip_desc"
+                    }
+                  ]
+                },
+                {
+                  "type": "composite",
+                  "name": "Toggle",
+                  "props": {
+                    "name": "seo.sitemap_gzip",
+                    "size": "md"
+                  }
+                }
+              ]
+            },
+            {
               "id": "sitemap_last_updated_block",
               "type": "basic",
               "name": "Div",
