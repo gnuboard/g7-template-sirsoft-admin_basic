@@ -265,6 +265,57 @@
           "meta": {}
         }
       }
+    },
+    {
+      "id": "sitemap_status",
+      "label_key": "$t:editor.data_source.sitemap_status",
+      "type": "api",
+      "endpoint": "/api/admin/seo/sitemap/status",
+      "method": "GET",
+      "if": "{{(query.tab || _global.activeSettingsTab || 'general') === 'seo'}}",
+      "auto_fetch": true,
+      "auth_required": true,
+      "fallback": {
+        "data": {
+          "last_updated_at": null,
+          "progress": null,
+          "realtime_enabled": false
+        }
+      },
+      "onSuccess": [
+        {
+          "handler": "startInterval",
+          "if": "{{response?.data?.data?.realtime_enabled !== true && ['queued','running','writing'].includes(response?.data?.data?.progress?.status ?? '')}}",
+          "params": {
+            "id": "sitemap_progress_poll",
+            "intervalMs": 3000,
+            "actions": [
+              {
+                "handler": "refetchDataSource",
+                "params": {
+                  "dataSourceId": "sitemap_status"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "handler": "stopInterval",
+          "if": "{{['completed','failed'].includes(response?.data?.data?.progress?.status ?? '')}}",
+          "params": {
+            "id": "sitemap_progress_poll"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sitemap_progress_ws",
+      "label_key": "$t:editor.data_source.sitemap_progress_ws",
+      "type": "websocket",
+      "channel": "core.admin.seo.sitemap",
+      "event": "sitemap.progress.updated",
+      "channel_type": "private",
+      "target_source": "sitemap_status"
     }
   ],
   "slots": {
@@ -310,7 +361,7 @@
                     "name": "Icon",
                     "props": {
                       "name": "refresh",
-                      "className": "w-5 h-5"
+                      "className": "text-xl"
                     }
                   }
                 ]
@@ -338,7 +389,7 @@
                     "name": "Icon",
                     "props": {
                       "name": "lock",
-                      "className": "w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0"
+                      "className": "text-xl text-yellow-600 dark:text-yellow-400 flex-shrink-0"
                     }
                   },
                   {
@@ -512,7 +563,7 @@
                         "name": "Icon",
                         "props": {
                           "name": "triangle-exclamation",
-                          "className": "w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+                          "className": "text-xl text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
                         }
                       },
                       {

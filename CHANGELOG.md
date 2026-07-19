@@ -4,6 +4,22 @@
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르며,
 [Semantic Versioning](https://semver.org/lang/ko/)을 준수합니다.
 
+## [1.0.4] - 2026-07-17
+
+### Added
+
+- SEO 설정에 Sitemap 분할 기준(파일당 URL 수)과 Sitemap 압축 항목을 추가했습니다. URL 이 분할 기준을 넘으면 sitemap 이 여러 파일로 나뉘어 생성됩니다.
+- SEO 설정에 다국어 대체 링크(hreflang) 항목을 추가했습니다. 다국어 사이트에서 sitemap 에 각 언어 버전을 가리키는 링크를 넣을지 켜고 끌 수 있으며, 끄면 sitemap 크기를 줄일 수 있습니다.
+- 고급 설정의 캐시 항목에 Sitemap 캐시 유지 시간을 추가했습니다. SEO 설정의 Sitemap 캐시 항목을 비워두면 이 값을 따릅니다.
+
+### Added
+
+- SEO 설정에서 sitemap 생성 진행 상황을 화면에서 확인할 수 있습니다. 대기·생성 중·파일 작성 중·완료·실패 단계와 현재 처리 중인 항목, 누적 URL 수가 표시됩니다. 실시간 연결(WebSocket)이 켜져 있으면 즉시 갱신되고, 꺼져 있으면 주기적으로 확인합니다.
+
+### Changed
+
+- SEO 설정의 "지금 생성" 버튼이 sitemap 생성을 예약하고 바로 응답합니다. 사이트 규모가 커도 화면이 멈추지 않으며, 생성 중에는 버튼이 비활성화되고 진행 상황이 화면에 표시됩니다.
+
 ## [1.0.3] - 2026-07-14
 
 ### Fixed
