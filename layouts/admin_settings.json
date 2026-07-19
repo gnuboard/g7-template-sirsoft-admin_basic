@@ -285,7 +285,7 @@
       "onSuccess": [
         {
           "handler": "startInterval",
-          "if": "{{sitemap_status?.data?.realtime_enabled !== true && ['queued','running','writing'].includes(sitemap_status?.data?.progress?.status ?? '')}}",
+          "if": "{{response?.data?.data?.realtime_enabled !== true && ['queued','running','writing'].includes(response?.data?.data?.progress?.status ?? '')}}",
           "params": {
             "id": "sitemap_progress_poll",
             "intervalMs": 3000,
@@ -301,7 +301,7 @@
         },
         {
           "handler": "stopInterval",
-          "if": "{{['completed','failed'].includes(sitemap_status?.data?.progress?.status ?? '')}}",
+          "if": "{{['completed','failed'].includes(response?.data?.data?.progress?.status ?? '')}}",
           "params": {
             "id": "sitemap_progress_poll"
           }

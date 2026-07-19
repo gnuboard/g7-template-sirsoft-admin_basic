@@ -59,6 +59,13 @@ describe('admin_settings — sitemap 진행상황 데이터소스', () => {
     expect(start!.if).toContain('queued');
     expect(start!.if).toContain('running');
     expect(start!.if).toContain('writing');
+    // onSuccess 조건은 방금 받은 응답(response.data)을 봐야 한다. 명명 소스(sitemap_status)는
+    // onSuccess 실행 시점엔 아직 이전 렌더의 값(stale)이라, 재생성 직후(queued)에도 폴링이
+    // 시작되지 않는 회귀가 발생한다(Reverb OFF 폴백 붕괴). 신선한 response 로 게이트해야 한다.
+    // onSuccess 의 response.data 는 응답 봉투 전체({success,message,data}) 이므로 progress 는
+    // response.data.data.progress (double .data) 다. 한 단계 부족하면 undefined → 폴링 미시작.
+    expect(start!.if).toContain('response?.data?.data?.progress?.status');
+    expect(start!.if).not.toContain('sitemap_status?.data?.progress?.status');
     // 폴링 액션은 sitemap_status 재조회
     const refetch = (start!.params.actions as AnyJson[])[0];
     expect(refetch.handler).toBe('refetchDataSource');
@@ -73,6 +80,9 @@ describe('admin_settings — sitemap 진행상황 데이터소스', () => {
     expect(stop).toBeTruthy();
     expect(stop!.if).toContain('completed');
     expect(stop!.if).toContain('failed');
+    // startInterval 과 동일하게 신선한 response(double .data) 로 게이트 (stale 명명 소스 금지)
+    expect(stop!.if).toContain('response?.data?.data?.progress?.status');
+    expect(stop!.if).not.toContain('sitemap_status?.data?.progress?.status');
     expect(stop!.params.id).toBe('sitemap_progress_poll');
   });
 
