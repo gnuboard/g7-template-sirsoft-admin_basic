@@ -71,12 +71,42 @@ describe('어드민 베이스 transition_overlay (이슈 #245)', () => {
 });
 
 describe('어드민 베이스 사이드바 프로필 영역 (이슈 #384)', () => {
-    it('좌측 사이드바 하단 프로필/링크 영역을 렌더링하지 않는다', () => {
-        const sidebarFooter = findById((adminBase as any).components, 'sidebar_footer');
+    /**
+     * #384 가 막으려는 것은 "사이드바 하단 **프로필/계정 UI**" 이지 sidebar_footer
+     * 컨테이너 자체가 아니다. #450 이 같은 컨테이너에 "사이트 보기" 크로스 이동 링크를
+     * 재도입했으므로, 컨테이너 id 부재로 단언하면 그 정상 기능에 걸린다.
+     * 의도대로 계정 UI 부재를 단언한다.
+     */
+    it('좌측 사이드바에 프로필/계정 UI 를 렌더링하지 않는다', () => {
         const sidebarProfile = findById((adminBase as any).components, 'user_profile');
-
-        expect(sidebarFooter).toBeUndefined();
         expect(sidebarProfile).toBeUndefined();
+
+        const sidebarFooter = findById((adminBase as any).components, 'sidebar_footer');
+        if (sidebarFooter) {
+            // 컨테이너가 있어도 그 안에 계정/프로필 컴포넌트가 있으면 안 된다.
+            const names: string[] = [];
+            const walk = (node: any): void => {
+                if (!node || typeof node !== 'object') return;
+                if (Array.isArray(node)) return node.forEach(walk);
+                if (node.name) names.push(node.name);
+                Object.values(node).forEach(walk);
+            };
+            walk(sidebarFooter);
+
+            expect(names).not.toContain('UserProfile');
+            expect(names).not.toContain('Avatar');
+        }
+    });
+
+    /**
+     * #450 크로스 이동 링크는 사이드바 하단에 유지되어야 한다 (제거 회귀 차단).
+     */
+    it('사이드바 하단 "사이트 보기" 크로스 이동 링크는 유지한다', () => {
+        const viewSiteLink = findById((adminBase as any).components, 'sidebar_view_site_link');
+
+        expect(viewSiteLink).toBeDefined();
+        expect(viewSiteLink?.name).toBe('A');
+        expect(viewSiteLink?.props).toMatchObject({ href: '/', target: '_blank' });
     });
 
     it('계정 기능은 상단 헤더 드롭다운으로 유지한다', () => {

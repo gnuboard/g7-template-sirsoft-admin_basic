@@ -26,7 +26,8 @@
       "identityMessages",
       "adminIdentityPolicies",
       "policies",
-      "language_packs"
+      "language_packs",
+      "sitemap_status"
     ]
   },
   "data_sources": [
