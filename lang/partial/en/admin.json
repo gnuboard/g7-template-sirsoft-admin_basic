@@ -1307,7 +1307,16 @@
       "default_language": "Default Language",
       "select_language": "Select a language",
       "timezone": "Timezone",
-      "select_timezone": "Select a timezone"
+      "select_timezone": "Select a timezone",
+      "asset_url_mode": "Asset file URL style",
+      "asset_url_mode_help": "Chosen automatically based on your server setup. Leave it alone if pages load correctly.",
+      "asset_url_mode_extension": "Use file extensions (recommended)",
+      "asset_url_mode_extensionless": "No file extensions",
+      "asset_url_mode_detect": "Detect automatically",
+      "asset_url_mode_detecting": "Detecting asset URL style...",
+      "asset_url_mode_detect_extension": "File extensions work fine on this server.",
+      "asset_url_mode_detect_extensionless": "The server is intercepting extension URLs. Switch to no extensions and save.",
+      "asset_url_mode_detect_unavailable": "Detection failed. The server did not respond, so the style could not be determined."
     },
     "mail": {
       "smtp_settings": "SMTP Settings",

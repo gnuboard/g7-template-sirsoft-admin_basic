@@ -463,6 +463,94 @@
                       "text": "{{_local.errors?.['general.timezone']?.[0] ?? ''}}"
                     }
                   ]
+                },
+                {
+                  "id": "field_asset_url_mode",
+                  "type": "basic",
+                  "name": "Div",
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Label",
+                      "props": {
+                        "className": "form-label"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.general.asset_url_mode"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "basic",
+                      "name": "P",
+                      "props": {
+                        "className": "form-help"
+                      },
+                      "text": "$t:admin.settings.general.asset_url_mode_help"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "props": {
+                        "className": "flex gap-2 items-start"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Div",
+                          "props": {
+                            "className": "flex-1"
+                          },
+                          "children": [
+                            {
+                              "type": "composite",
+                              "name": "Select",
+                              "props": {
+                                "name": "general.asset_url_mode",
+                                "className": "w-full",
+                                "disabled": "{{_computed.isReadOnly}}",
+                                "options": [
+                                  {
+                                    "value": "extension",
+                                    "label": "$t:admin.settings.general.asset_url_mode_extension"
+                                  },
+                                  {
+                                    "value": "extensionless",
+                                    "label": "$t:admin.settings.general.asset_url_mode_extensionless"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Button",
+                          "props": {
+                            "type": "button",
+                            "className": "btn-secondary whitespace-nowrap",
+                            "disabled": "{{_computed.isReadOnly}}"
+                          },
+                          "children": [
+                            {
+                              "type": "basic",
+                              "name": "Span",
+                              "text": "$t:admin.settings.general.asset_url_mode_detect"
+                            }
+                          ],
+                          "actions": [
+                            {
+                              "event": "onClick",
+                              "handler": "detectAssetUrlMode"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
