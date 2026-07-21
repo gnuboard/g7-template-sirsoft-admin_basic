@@ -28,6 +28,24 @@ export type DetectResult = 'extension' | 'extensionless' | 'unavailable';
  */
 export declare function detectAssetUrlMode(): Promise<DetectResult>;
 /**
+ * 저장된 모드와 실제 환경을 대조해 불일치를 전역 상태에 실어준다 (§5).
+ *
+ * 관리자 화면 자체가 안 뜨는 결함이라 "브라우저로 설정을 바꾸세요" 는 순환 참조다.
+ * 반대로 자가 복구가 조용히 성공하면 관리자는 사이트가 정상이라 믿고 저장값을
+ * 영영 고치지 않는다. 그래서 **대시보드가 스스로 프로브를 던져 저장값과 대조**한다.
+ *
+ * L5 위반이 아니다 — 서버 설정을 쓰지 않고 관리자에게 보여주기만 한다.
+ * L9 위반도 아니다 — L9 가 금지하는 것은 엔진 레이어(Router/LayoutLoader/
+ * ComponentRegistry)의 자산 로딩 중 재감지 캐스케이드이고, 이것은 관리자 화면
+ * 1회 진단이다.
+ *
+ * 판정 불가(`unavailable`)면 아무것도 표시하지 않는다. 일시적 네트워크 장애로
+ * 대시보드에 경고가 뜨면 신호가 아니라 소음이 된다.
+ *
+ * @param _action 액션 정의 (미사용)
+ */
+export declare function checkAssetUrlModeDriftHandler(_action?: any): Promise<void>;
+/**
  * 자산 URL 방식 자동 감지 핸들러.
  *
  * 판정 결과를 폼 상태(`general.asset_url_mode`)에 반영하고 토스트로 안내한다.

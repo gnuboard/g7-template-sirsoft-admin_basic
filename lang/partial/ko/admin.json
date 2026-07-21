@@ -139,7 +139,10 @@
       "unanswered_inquiries": "미답변 문의",
       "unanswered_inquiries_with_count": "미답변문의(3)",
       "latest_reviews": "최신 리뷰"
-    }
+    },
+    "asset_url_mode_drift_title": "자산 파일 주소 방식이 서버 환경과 다릅니다",
+    "asset_url_mode_drift_description": "저장된 방식으로는 일부 주소가 서버에 가로채여 화면이 뜨지 않을 수 있습니다. 방문자 화면은 브라우저가 자동으로 보정하지만 검색엔진 봇에는 보정이 적용되지 않으므로, 환경설정에서 감지 결과를 저장해 주세요.",
+    "asset_url_mode_drift_action": "환경설정 > 일반에서 확인하기"
   },
   "users": {
     "page_title": "사용자 관리",

@@ -75,6 +75,56 @@ export async function detectAssetUrlMode(): Promise<DetectResult> {
 }
 
 /**
+ * 서버에 **저장된** 자산 URL 방식을 읽는다.
+ *
+ * 런타임 전환값(`G7Config.assetUrlMode` / `__g7AssetUrlMode`)이 아니라 설정값을 본다.
+ * 자가 복구가 이미 모드를 바꿔 놓았다면 런타임 값은 감지 결과와 같아져 드리프트가
+ * 사라져 보이는데, 그때야말로 관리자에게 알려야 할 상황이다 — 봇은 JavaScript 를
+ * 실행하지 않아 자가 복구가 닿지 않으므로 저장값이 틀린 채로 두면 SEO 는 계속 깨진다.
+ *
+ * @returns 저장된 모드 (미설정이면 기본값 `extension`)
+ */
+function getStoredAssetUrlMode(): string {
+    const config = (window as any).G7Config;
+
+    return config?.settings?.general?.asset_url_mode ?? 'extension';
+}
+
+/**
+ * 저장된 모드와 실제 환경을 대조해 불일치를 전역 상태에 실어준다 (§5).
+ *
+ * 관리자 화면 자체가 안 뜨는 결함이라 "브라우저로 설정을 바꾸세요" 는 순환 참조다.
+ * 반대로 자가 복구가 조용히 성공하면 관리자는 사이트가 정상이라 믿고 저장값을
+ * 영영 고치지 않는다. 그래서 **대시보드가 스스로 프로브를 던져 저장값과 대조**한다.
+ *
+ * L5 위반이 아니다 — 서버 설정을 쓰지 않고 관리자에게 보여주기만 한다.
+ * L9 위반도 아니다 — L9 가 금지하는 것은 엔진 레이어(Router/LayoutLoader/
+ * ComponentRegistry)의 자산 로딩 중 재감지 캐스케이드이고, 이것은 관리자 화면
+ * 1회 진단이다.
+ *
+ * 판정 불가(`unavailable`)면 아무것도 표시하지 않는다. 일시적 네트워크 장애로
+ * 대시보드에 경고가 뜨면 신호가 아니라 소음이 된다.
+ *
+ * @param _action 액션 정의 (미사용)
+ */
+export async function checkAssetUrlModeDriftHandler(_action?: any): Promise<void> {
+    try {
+        const detected = await detectAssetUrlMode();
+        if (detected === 'unavailable') return;
+
+        const stored = getStoredAssetUrlMode();
+        if (detected === stored) return;
+
+        (window as any).G7Core?.state?.setGlobal?.({
+            assetUrlModeDrift: { detected, stored },
+        });
+    } catch (e) {
+        // 대시보드 진단이 실패해도 대시보드 자체는 정상 동작해야 한다.
+        logger.warn('자산 URL 방식 대조 실패 (대시보드 동작에는 영향 없음):', e);
+    }
+}
+
+/**
  * 자산 URL 방식 자동 감지 핸들러.
  *
  * 판정 결과를 폼 상태(`general.asset_url_mode`)에 반영하고 토스트로 안내한다.

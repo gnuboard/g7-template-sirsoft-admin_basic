@@ -16,7 +16,7 @@
 // e2e:allow 프로브 판정의 순수 분기 로직 단위. 브라우저 시나리오는 asset-url-mode.spec.ts 담당.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { detectAssetUrlMode } from '../detectAssetUrlModeHandler';
+import { checkAssetUrlModeDriftHandler, detectAssetUrlMode } from '../detectAssetUrlModeHandler';
 
 /** 서버 AssetProbeController::PROBE_TOKEN 과 동일해야 하는 값 */
 const TOKEN = 'G7_ASSET_PROBE_OK';
@@ -180,6 +180,98 @@ describe('detectAssetUrlMode — 프로브 판정 (§12 L6)', () => {
             fetchSpy.mockRejectedValue(new TypeError('Failed to fetch'));
 
             await expect(detectAssetUrlMode()).resolves.toBe('unavailable');
+        });
+    });
+
+    describe('대시보드 드리프트 대조 (§5)', () => {
+        let setGlobal: ReturnType<typeof vi.fn>;
+
+        /**
+         * 저장된 모드와 (선택적으로) 자가 복구된 런타임 모드를 심는다.
+         *
+         * @param stored 서버 설정에 저장된 모드 (undefined 면 미설정)
+         * @param recoveredRuntime 자가 복구가 전환해 둔 런타임 모드
+         */
+        const setConfig = (stored?: string, recoveredRuntime?: string) => {
+            (window as any).G7Config = {
+                assetUrlMode: recoveredRuntime ?? stored,
+                settings: stored === undefined ? {} : { general: { asset_url_mode: stored } },
+            };
+        };
+
+        beforeEach(() => {
+            setGlobal = vi.fn();
+            (window as any).G7Core = { state: { setGlobal } };
+        });
+
+        afterEach(() => {
+            delete (window as any).G7Core;
+            delete (window as any).G7Config;
+        });
+
+        it('감지 결과가 저장값과 같으면 알리지 않는다', async () => {
+            setConfig('extension');
+            respond(mockResponse({}), mockResponse({}));
+
+            await checkAssetUrlModeDriftHandler();
+
+            expect(setGlobal, '드리프트가 없는데 대시보드에 경고를 띄웠다').not.toHaveBeenCalled();
+        });
+
+        it('감지 결과가 저장값과 다르면 양쪽 값을 함께 알린다', async () => {
+            setConfig('extension');
+            respond(mockResponse({ ok: false }), mockResponse({}));
+
+            await checkAssetUrlModeDriftHandler();
+
+            expect(setGlobal).toHaveBeenCalledWith({
+                assetUrlModeDrift: { detected: 'extensionless', stored: 'extension' },
+            });
+        });
+
+        it('판정 불가면 알리지 않는다 (일시 장애를 경고로 만들지 않는다)', async () => {
+            setConfig('extension');
+            respond(mockResponse({ ok: false }), mockResponse({ ok: false }));
+
+            await checkAssetUrlModeDriftHandler();
+
+            expect(setGlobal, '네트워크 장애를 설정 불일치로 오인해 경고했다').not.toHaveBeenCalled();
+        });
+
+        it('저장값이 없으면 기본값 extension 을 기준으로 대조한다', async () => {
+            setConfig(undefined);
+            respond(mockResponse({ ok: false }), mockResponse({}));
+
+            await checkAssetUrlModeDriftHandler();
+
+            expect(setGlobal).toHaveBeenCalledWith({
+                assetUrlModeDrift: { detected: 'extensionless', stored: 'extension' },
+            });
+        });
+
+        // 이 케이스가 이 기능의 존재 이유다. 자가 복구가 이미 런타임 모드를 바꿔 놓으면
+        // 화면은 멀쩡해 보이지만 저장값은 여전히 틀려 있다. 봇은 JavaScript 를 실행하지
+        // 않아 자가 복구가 닿지 않으므로, 저장값을 고치지 않으면 SEO 는 계속 깨진다.
+        it('자가 복구로 런타임 모드가 이미 바뀌었어도 저장값 기준으로 드리프트를 잡는다', async () => {
+            setConfig('extension', 'extensionless');
+            respond(mockResponse({ ok: false }), mockResponse({}));
+
+            await checkAssetUrlModeDriftHandler();
+
+            expect(
+                setGlobal,
+                '런타임 전환값을 기준으로 대조해 드리프트를 놓쳤다 — 저장값은 여전히 틀린 상태다',
+            ).toHaveBeenCalledWith({
+                assetUrlModeDrift: { detected: 'extensionless', stored: 'extension' },
+            });
+        });
+
+        it('프로브가 throw 해도 대시보드를 죽이지 않는다', async () => {
+            setConfig('extension');
+            fetchSpy.mockRejectedValue(new TypeError('Failed to fetch'));
+
+            await expect(checkAssetUrlModeDriftHandler()).resolves.toBeUndefined();
+            expect(setGlobal).not.toHaveBeenCalled();
         });
     });
 

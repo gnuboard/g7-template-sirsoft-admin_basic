@@ -135,7 +135,10 @@
       "unanswered_inquiries": "Unanswered Inquiries",
       "unanswered_inquiries_with_count": "Unanswered (3)",
       "latest_reviews": "Latest Reviews"
-    }
+    },
+    "asset_url_mode_drift_title": "Asset URL style does not match this server",
+    "asset_url_mode_drift_description": "With the saved style, some URLs may be intercepted by the server and pages may not load. Visitors are corrected automatically in the browser, but search engine bots are not, so please save the detected style in Settings.",
+    "asset_url_mode_drift_action": "Review in Settings > General"
   },
   "users": {
     "page_title": "User Management",

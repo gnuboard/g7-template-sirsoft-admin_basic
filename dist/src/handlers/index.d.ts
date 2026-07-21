@@ -6,7 +6,7 @@ import { saveMultilingualTagHandler, cancelMultilingualTagHandler, updateMultili
 import { setDateRangeHandler } from './setDateRangeHandler';
 import { toggleSidebarHandler, initSidebarHandler } from './sidebarHandler';
 import { downloadAttachmentHandler } from './downloadAttachment';
-import { detectAssetUrlModeHandler } from './detectAssetUrlModeHandler';
+import { checkAssetUrlModeDriftHandler, detectAssetUrlModeHandler } from './detectAssetUrlModeHandler';
 /**
  * 핸들러 맵
  *
@@ -17,6 +17,7 @@ import { detectAssetUrlModeHandler } from './detectAssetUrlModeHandler';
  */
 export declare const handlerMap: {
     readonly detectAssetUrlMode: typeof detectAssetUrlModeHandler;
+    readonly checkAssetUrlModeDrift: typeof checkAssetUrlModeDriftHandler;
     readonly setTheme: typeof setThemeHandler;
     readonly initTheme: typeof initThemeHandler;
     readonly scrollToSection: typeof scrollToSectionHandler;
