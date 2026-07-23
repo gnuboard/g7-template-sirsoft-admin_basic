@@ -31,6 +31,10 @@ function findJsonFiles(dir) {
       } else if (item.endsWith('.json')) {
         results.push(fullPath);
       }
+      // `.g7.html` 은 여기서 수집하지 않는다 — 아래 dynamic 추출이 JSON.parse 를 전제하기 때문이다.
+      // 대신 `main.css` 가 `@source "../../layouts/**/*.g7.html"` 로 직접 앵커해 정적 클래스는
+      // Tailwind 스캐너가 잡는다. safelist 는 **동적 생성 클래스**(classMap variants·switch-value 등
+      // 스캐너가 문자열로 못 보는 것)만 담당하므로 두 경로의 역할이 갈린다.
     }
   } catch (e) {
     // 디렉토리 접근 실패 시 무시
@@ -146,18 +150,12 @@ const mainCssPath = path.join(__dirname, '../src/styles/main.css');
 let mainCss = fs.readFileSync(mainCssPath, 'utf-8');
 
 // 기존 safelist 마커 제거
-//
-// 삽입 블록은 앞뒤에 개행을 하나씩 두는데, 마커 사이만 잘라내면 그 개행 두 개가 남는다.
-// 그대로 두면 빌드 1회마다 main.css 에 빈 줄 2개가 쌓여(실측: 373줄 누적) 매 빌드가 소스
-// 파일을 변경된 것으로 만든다. 잘라낼 때 마커 주변 공백까지 함께 걷어낸다.
 const markerStart = '/* SAFELIST-START */';
 const markerEnd = '/* SAFELIST-END */';
 const startIdx = mainCss.indexOf(markerStart);
 const endIdx = mainCss.indexOf(markerEnd);
 if (startIdx !== -1 && endIdx !== -1) {
-  mainCss =
-    mainCss.slice(0, startIdx).replace(/\s+$/, '') +
-    mainCss.slice(endIdx + markerEnd.length).replace(/^\s+/, '\n\n');
+  mainCss = mainCss.slice(0, startIdx) + mainCss.slice(endIdx + markerEnd.length);
 }
 
 // 새 safelist 삽입 (@source "../../layouts/**/*.json"; 바로 뒤에)
@@ -165,7 +163,8 @@ const classesStr = [...classes].sort().join(' ');
 const safelistBlock = `
 ${markerStart}
 @source inline("${classesStr}");
-${markerEnd}`;
+${markerEnd}
+`;
 
 // @source "../../layouts/**/*.json"; 뒤에 삽입
 const layoutSourcePattern = /@source\s+"\.\.\/\.\.\/layouts\/\*\*\/\*\.json";/;

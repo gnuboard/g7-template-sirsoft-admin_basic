@@ -392,9 +392,6 @@
                                     "if": "{{(admin_menu.data ?? []).length > 0}}",
                                     "props": {
                                         "menu": "{{admin_menu.data}}"
-                                    },
-                                    "data_binding": {
-                                        "menu": "admin_menu.data"
                                     }
                                 },
                                 {
@@ -615,22 +612,6 @@
                                                                             "dataSourceId": "notification_unread_count"
                                                                         }
                                                                     }
-                                                                ],
-                                                                "onError": [
-                                                                    {
-                                                                        "handler": "setState",
-                                                                        "params": {
-                                                                            "target": "global",
-                                                                            "notificationsLoadingMore": false
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "handler": "toast",
-                                                                        "params": {
-                                                                            "type": "error",
-                                                                            "message": "{{error.message}}"
-                                                                        }
-                                                                    }
                                                                 ]
                                                             }
                                                         ]
@@ -659,15 +640,6 @@
                                                                         "handler": "refetchDataSource",
                                                                         "params": {
                                                                             "dataSourceId": "notification_unread_count"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "onError": [
-                                                                    {
-                                                                        "handler": "toast",
-                                                                        "params": {
-                                                                            "type": "error",
-                                                                            "message": "{{error.message}}"
                                                                         }
                                                                     }
                                                                 ]
@@ -707,22 +679,6 @@
                                                                         "handler": "refetchDataSource",
                                                                         "params": {
                                                                             "dataSourceId": "notification_unread_count"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "onError": [
-                                                                    {
-                                                                        "handler": "setState",
-                                                                        "params": {
-                                                                            "target": "global",
-                                                                            "notificationsLoadingMore": false
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "handler": "toast",
-                                                                        "params": {
-                                                                            "type": "error",
-                                                                            "message": "{{error.message}}"
                                                                         }
                                                                     }
                                                                 ]
@@ -781,15 +737,6 @@
                                                             "handler": "refetchDataSource",
                                                             "params": {
                                                                 "dataSourceId": "notification_unread_count"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "onError": [
-                                                        {
-                                                            "handler": "toast",
-                                                            "params": {
-                                                                "type": "error",
-                                                                "message": "{{error.message}}"
                                                             }
                                                         }
                                                     ]
@@ -939,9 +886,6 @@
                                                         "dropdownOnly": true,
                                                         "showChevron": false,
                                                         "dropdownDirection": "down"
-                                                    },
-                                                    "data_binding": {
-                                                        "user": "current_user.data"
                                                     }
                                                 }
                                             ]
@@ -1105,22 +1049,6 @@
                                                                             "dataSourceId": "notification_unread_count"
                                                                         }
                                                                     }
-                                                                ],
-                                                                "onError": [
-                                                                    {
-                                                                        "handler": "setState",
-                                                                        "params": {
-                                                                            "target": "global",
-                                                                            "notificationsLoadingMore": false
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "handler": "toast",
-                                                                        "params": {
-                                                                            "type": "error",
-                                                                            "message": "{{error.message}}"
-                                                                        }
-                                                                    }
                                                                 ]
                                                             }
                                                         ]
@@ -1149,15 +1077,6 @@
                                                                         "handler": "refetchDataSource",
                                                                         "params": {
                                                                             "dataSourceId": "notification_unread_count"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "onError": [
-                                                                    {
-                                                                        "handler": "toast",
-                                                                        "params": {
-                                                                            "type": "error",
-                                                                            "message": "{{error.message}}"
                                                                         }
                                                                     }
                                                                 ]
@@ -1197,22 +1116,6 @@
                                                                         "handler": "refetchDataSource",
                                                                         "params": {
                                                                             "dataSourceId": "notification_unread_count"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "onError": [
-                                                                    {
-                                                                        "handler": "setState",
-                                                                        "params": {
-                                                                            "target": "global",
-                                                                            "notificationsLoadingMore": false
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "handler": "toast",
-                                                                        "params": {
-                                                                            "type": "error",
-                                                                            "message": "{{error.message}}"
                                                                         }
                                                                     }
                                                                 ]
@@ -1271,15 +1174,6 @@
                                                             "handler": "refetchDataSource",
                                                             "params": {
                                                                 "dataSourceId": "notification_unread_count"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "onError": [
-                                                        {
-                                                            "handler": "toast",
-                                                            "params": {
-                                                                "type": "error",
-                                                                "message": "{{error.message}}"
                                                             }
                                                         }
                                                     ]
