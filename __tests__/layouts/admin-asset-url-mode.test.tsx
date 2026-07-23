@@ -284,6 +284,44 @@ describe('자산 URL 이중 모드 — 레이아웃 렌더링 (§검증)', () =>
             t.cleanup();
         });
 
+        it('에셋 서빙 방식 항목이 지역화가 아니라 전용 카드에 있다 (배치)', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const json = JSON.parse(
+                fs.readFileSync(
+                    path.resolve(
+                        __dirname,
+                        '../../layouts/partials/admin_settings/_tab_general.json',
+                    ),
+                    'utf8',
+                ),
+            );
+            const find = (node: any, id: string): any => {
+                if (!node || typeof node !== 'object') return null;
+                if (node.id === id) return node;
+                for (const k of Object.keys(node)) {
+                    if (node[k] && typeof node[k] === 'object') {
+                        const r = find(node[k], id);
+                        if (r) return r;
+                    }
+                }
+
+                return null;
+            };
+            const has = (node: any, id: string): boolean => !!find(node, id);
+
+            const serving = find(json, 'card_asset_serving');
+            expect(serving, '에셋 서빙 전용 카드가 없다').toBeTruthy();
+            expect(has(serving, 'field_asset_url_mode'), '전용 카드에 항목이 없다').toBe(true);
+
+            const localization = find(json, 'card_localization');
+            expect(localization, '지역화 카드가 없다').toBeTruthy();
+            expect(
+                has(localization, 'field_asset_url_mode'),
+                '에셋 서빙 방식이 여전히 지역화 카드에 있다 — 언어/시간대와 무관한 인프라 설정이다',
+            ).toBe(false);
+        });
+
         // 감지 결과 인라인 안내의 실제 렌더는 `_local` 조건부이며, 이 상태는 엔진의
         // 로컬상태 provider 로 평가된다 — createLayoutTest 는 이를 시드하지 못하므로
         // (dataContext._local 은 value 바인딩만 커버) 렌더 단언 대신 실제 레이아웃 JSON 의
