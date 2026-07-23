@@ -86,7 +86,7 @@
                       "handler": "toast",
                       "params": {
                         "type": "error",
-                        "message": "{{$error.message ?? '$t:admin.language_packs.messages.check_updates_failed'}}"
+                        "message": "{{error.message ?? '$t:admin.language_packs.messages.check_updates_failed'}}"
                       }
                     }
                   ]
@@ -278,7 +278,7 @@
                       "handler": "toast",
                       "params": {
                         "type": "error",
-                        "message": "{{$error.message ?? '$t:admin.language_packs.messages.check_updates_failed'}}"
+                        "message": "{{error.message ?? '$t:admin.language_packs.messages.check_updates_failed'}}"
                       }
                     }
                   ]
@@ -923,7 +923,7 @@
                                         "if": "{{row.scope === 'module'}}",
                                         "props": {
                                           "name": "cube",
-                                          "className": "w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0"
+                                          "className": "text-sm text-gray-500 dark:text-gray-400 flex-shrink-0"
                                         }
                                       },
                                       {
@@ -932,7 +932,7 @@
                                         "if": "{{row.scope === 'plugin'}}",
                                         "props": {
                                           "name": "puzzle-piece",
-                                          "className": "w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0"
+                                          "className": "text-sm text-gray-500 dark:text-gray-400 flex-shrink-0"
                                         }
                                       },
                                       {
@@ -941,7 +941,7 @@
                                         "if": "{{row.scope === 'template'}}",
                                         "props": {
                                           "name": "palette",
-                                          "className": "w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0"
+                                          "className": "text-sm text-gray-500 dark:text-gray-400 flex-shrink-0"
                                         }
                                       },
                                       {
@@ -1124,7 +1124,7 @@
                                         "handler": "toast",
                                         "params": {
                                           "type": "error",
-                                          "message": "{{$error.message ?? '$t:admin.language_packs.messages.toggle_failed'}}"
+                                          "message": "{{error.message ?? '$t:admin.language_packs.messages.toggle_failed'}}"
                                         }
                                       }
                                     ]

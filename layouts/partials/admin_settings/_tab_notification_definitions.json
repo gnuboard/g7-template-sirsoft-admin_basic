@@ -418,7 +418,7 @@
                                   "text": "$t:admin.settings.notification_definitions.no_template_for_channel"
                                 },
                                 {
-                                  "id": "recipients_badge",
+                                  "id": "recipients_badge_{{defIdx}}",
                                   "type": "basic",
                                   "name": "Div",
                                   "if": "{{((def.templates ?? []).find(t => t.channel === (_local.activeNotificationChannel ?? query.channel ?? 'mail'))?.recipients ?? []).length > 0}}",
@@ -541,7 +541,16 @@
                                             "type": "success"
                                           }
                                         }
-                                      ]
+                                      ],
+                                        "onError": [
+                                            {
+                                                "handler": "toast",
+                                                "params": {
+                                                    "type": "error",
+                                                    "message": "{{error.message}}"
+                                                }
+                                            }
+                                        ]
                                     }
                                   ]
                                 },

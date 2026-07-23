@@ -691,7 +691,7 @@
                                                         "type": "basic",
                                                         "name": "Div",
                                                         "props": {
-                                                            "className": "{{notification?.status === 'failed' ? 'w-2 h-2 mt-2 rounded-full bg-rose-500 flex-shrink-0' : (notification?.status === 'skipped' ? 'w-2 h-2 mt-2 rounded-full bg-slate-400 flex-shrink-0' : 'w-2 h-2 mt-2 rounded-full bg-emerald-500 flex-shrink-0')}}"
+                                                            "className": "{{notification?.status === 'failed' ? 'w-2 h-2 mt-2 rounded-full bg-rose-500 dark:bg-rose-400 flex-shrink-0' : (notification?.status === 'skipped' ? 'w-2 h-2 mt-2 rounded-full bg-slate-400 dark:bg-slate-300 flex-shrink-0' : 'w-2 h-2 mt-2 rounded-full bg-emerald-500 dark:bg-emerald-400 flex-shrink-0')}}"
                                                         }
                                                     },
                                                     {
@@ -830,7 +830,7 @@
                                                         "type": "basic",
                                                         "name": "Div",
                                                         "props": {
-                                                            "className": "w-2 h-2 mt-2 rounded-full bg-blue-500 flex-shrink-0"
+                                                            "className": "w-2 h-2 mt-2 rounded-full bg-blue-500 dark:bg-blue-400 flex-shrink-0"
                                                         }
                                                     },
                                                     {
@@ -1515,6 +1515,15 @@
                                                                                         "handler": "refetchDataSource",
                                                                                         "params": {
                                                                                             "dataSourceId": "dashboard_alerts"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "onError": [
+                                                                                    {
+                                                                                        "handler": "toast",
+                                                                                        "params": {
+                                                                                            "type": "error",
+                                                                                            "message": "{{error.message}}"
                                                                                         }
                                                                                     }
                                                                                 ]
