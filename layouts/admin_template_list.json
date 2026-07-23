@@ -186,7 +186,7 @@
                             "handler": "toast",
                             "params": {
                               "type": "error",
-                              "message": "{{$error.message}}"
+                              "message": "{{error.message}}"
                             }
                           }
                         ]
@@ -249,7 +249,7 @@
                     "name": "Icon",
                     "props": {
                       "name": "upload",
-                      "className": "w-5 h-5"
+                      "className": "text-xl"
                     }
                   },
                   {
@@ -280,7 +280,7 @@
                     "name": "Icon",
                     "props": {
                       "name": "globe",
-                      "className": "w-5 h-5"
+                      "className": "text-xl"
                     }
                   },
                   {
@@ -328,7 +328,7 @@
                     "name": "Icon",
                     "props": {
                       "name": "upload",
-                      "className": "w-5 h-5"
+                      "className": "text-xl"
                     }
                   },
                   {
@@ -352,7 +352,7 @@
                     "name": "Icon",
                     "props": {
                       "name": "globe",
-                      "className": "w-5 h-5"
+                      "className": "text-xl"
                     }
                   },
                   {
@@ -451,7 +451,16 @@
                                           "dataSourceId": "auto_deactivated_banner"
                                         }
                                       }
-                                    ]
+                                    ],
+                                      "onError": [
+                                          {
+                                              "handler": "toast",
+                                              "params": {
+                                                  "type": "error",
+                                                  "message": "{{error.message}}"
+                                              }
+                                          }
+                                      ]
                                   }
                                 ],
                                 "children": [
@@ -570,7 +579,7 @@
             "type": "basic",
             "name": "Div",
             "props": {
-              "className": "sticky-tab-nav"
+              "className": "sticky-tab-nav-responsive"
             },
             "children": [
               {
