@@ -103,7 +103,7 @@ const settingsFieldLayout = {
                     type: 'basic',
                     name: 'Label',
                     props: { className: 'form-label' },
-                    children: [{ type: 'basic', name: 'Span', text: '자산 파일 주소 방식' }],
+                    children: [{ type: 'basic', name: 'Span', text: '에셋 파일 서빙 방식' }],
                 },
                 {
                     type: 'basic',
@@ -138,11 +138,39 @@ const settingsFieldLayout = {
                         {
                             type: 'basic',
                             name: 'Button',
-                            props: { type: 'button', className: 'btn-secondary whitespace-nowrap' },
+                            props: { type: 'button', className: 'btn btn-secondary whitespace-nowrap' },
                             children: [{ type: 'basic', name: 'Span', text: '지금 감지' }],
                             actions: [{ event: 'onClick', handler: 'detectAssetUrlMode' }],
                         },
                     ],
+                },
+                {
+                    type: 'basic',
+                    name: 'P',
+                    if: "{{_local.asset_url_mode_detect_status === 'detecting'}}",
+                    props: { className: 'mt-2 text-sm text-gray-500', 'data-testid': 'detect-msg-detecting' },
+                    text: '감지 중',
+                },
+                {
+                    type: 'basic',
+                    name: 'P',
+                    if: "{{_local.asset_url_mode_detect_status === 'extension'}}",
+                    props: { className: 'mt-2 text-sm text-green-600', 'data-testid': 'detect-msg-extension' },
+                    text: '확장자 사용 방식으로 감지되었습니다',
+                },
+                {
+                    type: 'basic',
+                    name: 'P',
+                    if: "{{_local.asset_url_mode_detect_status === 'extensionless'}}",
+                    props: { className: 'mt-2 text-sm text-amber-600', 'data-testid': 'detect-msg-extensionless' },
+                    text: '확장자 미사용 방식으로 감지되었습니다',
+                },
+                {
+                    type: 'basic',
+                    name: 'P',
+                    if: "{{_local.asset_url_mode_detect_status === 'unavailable'}}",
+                    props: { className: 'mt-2 text-sm text-red-600', 'data-testid': 'detect-msg-unavailable' },
+                    text: '감지할 수 없습니다',
                 },
             ],
         },
@@ -173,7 +201,7 @@ const driftAlertLayout = {
                             type: 'basic',
                             name: 'Div',
                             props: { className: 'text-sm font-semibold' },
-                            text: '자산 파일 주소 방식이 서버 환경과 다릅니다',
+                            text: '에셋 파일 서빙 방식이 서버 환경과 다릅니다',
                         },
                         {
                             type: 'basic',
@@ -239,6 +267,99 @@ describe('자산 URL 이중 모드 — 레이아웃 렌더링 (§검증)', () =>
                 '모드에 따라 레이아웃 렌더 결과가 달라졌다 — 자산 URL 모드가 화면 구조로 새어나오고 있다',
             ).toBe(html[1]);
         });
+
+        it('감지 상태가 없으면 결과 안내가 렌더되지 않는다 (초기 상태는 조용하다)', async () => {
+            setServerMode('extension');
+
+            const t = createLayoutTest(settingsFieldLayout as any);
+            await t.render();
+
+            for (const status of ['detecting', 'extension', 'extensionless', 'unavailable']) {
+                expect(
+                    screen.queryByTestId(`detect-msg-${status}`),
+                    `감지 전인데 ${status} 안내가 떠 있다`,
+                ).not.toBeInTheDocument();
+            }
+
+            t.cleanup();
+        });
+
+        // 감지 결과 인라인 안내의 실제 렌더는 `_local` 조건부이며, 이 상태는 엔진의
+        // 로컬상태 provider 로 평가된다 — createLayoutTest 는 이를 시드하지 못하므로
+        // (dataContext._local 은 value 바인딩만 커버) 렌더 단언 대신 실제 레이아웃 JSON 의
+        // 배선을 구조로 검증한다. 상태 기록은 핸들러 단위테스트가, 실제 렌더는 E2E 가 커버.
+        it('감지 결과가 상태별 인라인 안내로 배선돼 있다 (토스트 아님) + 감지 버튼에 btn 베이스 클래스', () => {
+            const fs = require('fs');
+            const path = require('path');
+            const layoutPath = path.resolve(
+                __dirname,
+                '../../layouts/partials/admin_settings/_tab_general.json',
+            );
+            const json = JSON.parse(fs.readFileSync(layoutPath, 'utf8'));
+
+            const collect = (node: any, acc: any[] = []): any[] => {
+                if (!node || typeof node !== 'object') return acc;
+                if (Array.isArray(node)) {
+                    node.forEach((n) => collect(n, acc));
+
+                    return acc;
+                }
+                acc.push(node);
+                for (const k of Object.keys(node)) {
+                    if (node[k] && typeof node[k] === 'object') collect(node[k], acc);
+                }
+
+                return acc;
+            };
+            // 자산 URL 방식 필드 서브트리로 한정한다 — 같은 탭의 다른 필드는 정당하게
+            // toast 를 쓰므로 전체 탭을 훑으면 무관한 toast 까지 잡힌다.
+            const findById = (node: any, id: string): any => {
+                if (!node || typeof node !== 'object') return null;
+                if (node.id === id) return node;
+                for (const k of Object.keys(node)) {
+                    if (node[k] && typeof node[k] === 'object') {
+                        const found = findById(node[k], id);
+                        if (found) return found;
+                    }
+                }
+
+                return null;
+            };
+            const field = findById(json, 'field_asset_url_mode');
+            expect(field, 'field_asset_url_mode 노드를 찾지 못했다').toBeTruthy();
+            const nodes = collect(field);
+
+            // 감지 버튼: 다른 버튼(모달 취소·푸터)과 동일한 btn 베이스 클래스여야 박스로 보인다.
+            const button = nodes.find(
+                (n) =>
+                    n.name === 'Button' &&
+                    (n.actions ?? []).some((a: any) => a.handler === 'detectAssetUrlMode'),
+            );
+            expect(button, '감지 버튼을 찾지 못했다').toBeTruthy();
+            expect(
+                button.props.className,
+                '감지 버튼에 btn 베이스 클래스가 없어 평문처럼 보인다',
+            ).toContain('btn btn-secondary');
+
+            // 4개 상태 각각에 대응하는 인라인 안내 P (필드 하단, 토스트 아님).
+            for (const st of ['detecting', 'extension', 'extensionless', 'unavailable']) {
+                const p = nodes.find(
+                    (n) =>
+                        n.name === 'P' &&
+                        typeof n.if === 'string' &&
+                        n.if.includes('_local.asset_url_mode_detect_status') &&
+                        n.if.includes(`'${st}'`),
+                );
+                expect(p, `${st} 상태 인라인 안내가 배선되지 않았다`).toBeTruthy();
+                expect(String(p.text), `${st} 안내 문구가 다국어 키가 아니다`).toContain('$t:');
+            }
+
+            // 감지 결과가 toast 로 발화되지 않는다 (인라인 안내로 대체된 것을 배선으로 못박음).
+            const toastActions = nodes
+                .flatMap((n) => n.actions ?? [])
+                .filter((a: any) => a.handler === 'toast');
+            expect(toastActions, '감지 결과가 toast 로 발화되도록 배선돼 있다').toHaveLength(0);
+        });
     });
 
     describe('대시보드 — 자산 URL 방식 드리프트 안내', () => {
@@ -269,7 +390,7 @@ describe('자산 URL 이중 모드 — 레이아웃 렌더링 (§검증)', () =>
             await t.render();
 
             expect(screen.getByTestId('drift-alert')).toBeInTheDocument();
-            expect(screen.getByText('자산 파일 주소 방식이 서버 환경과 다릅니다')).toBeInTheDocument();
+            expect(screen.getByText('에셋 파일 서빙 방식이 서버 환경과 다릅니다')).toBeInTheDocument();
             expect(screen.getByText('환경설정에서 확인하기')).toBeInTheDocument();
 
             t.cleanup();

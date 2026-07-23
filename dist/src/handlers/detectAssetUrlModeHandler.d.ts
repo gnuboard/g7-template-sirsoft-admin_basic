@@ -48,12 +48,14 @@ export declare function checkAssetUrlModeDriftHandler(_action?: any): Promise<vo
 /**
  * 자산 URL 방식 자동 감지 핸들러.
  *
- * 판정 결과를 폼 상태(`general.asset_url_mode`)에 반영하고 토스트로 안내한다.
+ * 판정 결과를 폼 상태(`general.asset_url_mode`)에 반영하고, 감지 상태를
+ * `asset_url_mode_detect_status` 로 로컬 폼 상태에 기록한다 — 레이아웃이 이 값을 읽어
+ * 필드 하단에 결과 문구를 조건부로 렌더한다(토스트가 아니라 필드 옆 인라인 안내).
  * **저장은 하지 않는다** — 관리자가 결과를 보고 저장 버튼을 누르는 흐름을 유지해,
  * 감지가 오판했을 때 되돌릴 여지를 남긴다.
  *
  * 판정 불가(`unavailable`)면 값을 건드리지 않는다. 서버가 응답하지 않는 상황에서
- * 임의 값을 넣으면 멀쩡한 설정을 덮어쓸 수 있다.
+ * 임의 값을 넣으면 멀쩡한 설정을 덮어쓸 수 있다(상태만 `unavailable` 로 표시).
  *
  * @param _action 액션 정의 (미사용)
  * @param context 액션 컨텍스트 (setState 등)

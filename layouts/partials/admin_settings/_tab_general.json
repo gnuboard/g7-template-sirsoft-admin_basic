@@ -527,11 +527,12 @@
                           ]
                         },
                         {
+                          "id": "asset_url_mode_detect_button",
                           "type": "basic",
                           "name": "Button",
                           "props": {
                             "type": "button",
-                            "className": "btn-secondary whitespace-nowrap",
+                            "className": "btn btn-secondary whitespace-nowrap",
                             "disabled": "{{_computed.isReadOnly}}"
                           },
                           "children": [
@@ -549,6 +550,46 @@
                           ]
                         }
                       ]
+                    },
+                    {
+                      "id": "asset_url_mode_msg_detecting",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{_local.asset_url_mode_detect_status === 'detecting'}}",
+                      "props": {
+                        "className": "mt-2 text-sm text-gray-500 dark:text-gray-400"
+                      },
+                      "text": "$t:admin.settings.general.asset_url_mode_detecting"
+                    },
+                    {
+                      "id": "asset_url_mode_msg_extension",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{_local.asset_url_mode_detect_status === 'extension'}}",
+                      "props": {
+                        "className": "mt-2 text-sm text-green-600 dark:text-green-400"
+                      },
+                      "text": "$t:admin.settings.general.asset_url_mode_detect_extension"
+                    },
+                    {
+                      "id": "asset_url_mode_msg_extensionless",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{_local.asset_url_mode_detect_status === 'extensionless'}}",
+                      "props": {
+                        "className": "mt-2 text-sm text-amber-600 dark:text-amber-400"
+                      },
+                      "text": "$t:admin.settings.general.asset_url_mode_detect_extensionless"
+                    },
+                    {
+                      "id": "asset_url_mode_msg_unavailable",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{_local.asset_url_mode_detect_status === 'unavailable'}}",
+                      "props": {
+                        "className": "mt-2 text-sm text-red-600 dark:text-red-400"
+                      },
+                      "text": "$t:admin.settings.general.asset_url_mode_detect_unavailable"
                     }
                   ]
                 }

@@ -16,7 +16,11 @@
 // e2e:allow 프로브 판정의 순수 분기 로직 단위. 브라우저 시나리오는 asset-url-mode.spec.ts 담당.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { checkAssetUrlModeDriftHandler, detectAssetUrlMode } from '../detectAssetUrlModeHandler';
+import {
+    checkAssetUrlModeDriftHandler,
+    detectAssetUrlMode,
+    detectAssetUrlModeHandler,
+} from '../detectAssetUrlModeHandler';
 
 /** 서버 AssetProbeController::PROBE_TOKEN 과 동일해야 하는 값 */
 const TOKEN = 'G7_ASSET_PROBE_OK';
@@ -288,6 +292,80 @@ describe('detectAssetUrlMode — 프로브 판정 (§12 L6)', () => {
             for (const call of fetchSpy.mock.calls) {
                 expect(call[1]?.cache, '프로브가 캐시될 수 있는 요청으로 나갔다').toBe('no-store');
             }
+        });
+    });
+
+    describe('detectAssetUrlModeHandler — 결과를 토스트가 아닌 폼 상태로 (인라인 안내)', () => {
+        let setState: ReturnType<typeof vi.fn>;
+        let dispatch: ReturnType<typeof vi.fn>;
+
+        beforeEach(() => {
+            setState = vi.fn();
+            dispatch = vi.fn();
+            (window as any).G7Core = { state: { setLocal: setState }, dispatch };
+        });
+
+        afterEach(() => {
+            delete (window as any).G7Core;
+        });
+
+        it('감지 시작 시 detecting 상태를 먼저 기록한다', async () => {
+            respond(mockResponse({}), mockResponse({}));
+
+            await detectAssetUrlModeHandler(null, { setState });
+
+            expect(setState).toHaveBeenCalledWith({ asset_url_mode_detect_status: 'detecting' });
+        });
+
+        it('extension 판정 시 폼 값과 상태를 함께 기록한다', async () => {
+            respond(mockResponse({}), mockResponse({}));
+
+            await detectAssetUrlModeHandler(null, { setState });
+
+            expect(setState).toHaveBeenCalledWith({
+                'general.asset_url_mode': 'extension',
+                asset_url_mode_detect_status: 'extension',
+            });
+        });
+
+        it('extensionless 판정도 폼 값과 상태를 함께 기록한다', async () => {
+            respond(mockResponse({ ok: false }), mockResponse({}));
+
+            await detectAssetUrlModeHandler(null, { setState });
+
+            expect(setState).toHaveBeenCalledWith({
+                'general.asset_url_mode': 'extensionless',
+                asset_url_mode_detect_status: 'extensionless',
+            });
+        });
+
+        it('판정 불가면 상태만 unavailable 로 두고 폼 값은 건드리지 않는다', async () => {
+            respond(mockResponse({ ok: false }), mockResponse({ ok: false }));
+
+            await detectAssetUrlModeHandler(null, { setState });
+
+            expect(setState).toHaveBeenCalledWith({ asset_url_mode_detect_status: 'unavailable' });
+            const valueWrites = setState.mock.calls.filter(
+                (c) => 'general.asset_url_mode' in (c[0] ?? {}),
+            );
+            expect(valueWrites, '판정 불가인데 폼 값을 덮어썼다').toHaveLength(0);
+        });
+
+        it('결과를 토스트로 띄우지 않는다 (인라인 안내로 대체)', async () => {
+            respond(mockResponse({}), mockResponse({}));
+
+            await detectAssetUrlModeHandler(null, { setState });
+
+            const toastCalls = dispatch.mock.calls.filter((c) => c[0]?.handler === 'toast');
+            expect(toastCalls, '감지 결과가 여전히 토스트로 발화된다').toHaveLength(0);
+        });
+
+        it('프로브가 throw 해도 unavailable 상태로 수렴한다', async () => {
+            fetchSpy.mockRejectedValue(new Error('network down'));
+
+            await detectAssetUrlModeHandler(null, { setState });
+
+            expect(setState).toHaveBeenCalledWith({ asset_url_mode_detect_status: 'unavailable' });
         });
     });
 });
