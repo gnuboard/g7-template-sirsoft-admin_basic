@@ -135,7 +135,10 @@
       "unanswered_inquiries": "Unanswered Inquiries",
       "unanswered_inquiries_with_count": "Unanswered (3)",
       "latest_reviews": "Latest Reviews"
-    }
+    },
+    "asset_url_mode_drift_title": "Asset file serving mode does not match this server",
+    "asset_url_mode_drift_description": "With the saved style, some URLs may be intercepted by the server and pages may not load. Visitors are corrected automatically in the browser, but search engine bots are not, so please save the detected style in Settings.",
+    "asset_url_mode_drift_action": "Review in Settings > General"
   },
   "users": {
     "page_title": "User Management",
@@ -1307,7 +1310,16 @@
       "default_language": "Default Language",
       "select_language": "Select a language",
       "timezone": "Timezone",
-      "select_timezone": "Select a timezone"
+      "select_timezone": "Select a timezone",
+      "asset_url_mode": "Asset file serving mode",
+      "asset_url_mode_help": "Chosen automatically based on your server setup. Leave it alone if pages load correctly.",
+      "asset_url_mode_extension": "Use file extensions (recommended)",
+      "asset_url_mode_extensionless": "No file extensions",
+      "asset_url_mode_detect": "Detect automatically",
+      "asset_url_mode_detecting": "Detecting asset file serving mode...",
+      "asset_url_mode_detect_extension": "File extensions work fine on this server.",
+      "asset_url_mode_detect_extensionless": "A static-file optimization rule (e.g. nginx location ~* \\.(js|css|json|png|jpg|jpeg|gif|ico|svg|woff2?)$) is intercepting extension URLs. Switch to \"No file extensions\" and save.",
+      "asset_url_mode_detect_unavailable": "Detection failed. The server did not respond, so the style could not be determined."
     },
     "mail": {
       "smtp_settings": "SMTP Settings",
