@@ -1069,6 +1069,7 @@
                       }
                     },
                     {
+                      "comment": "audit:allow layout-list-context-navigate-merge-query 초기화 버튼 — type/frequency/status/검색어가 모두 URL 쿼리로 구동되므로(=이 화면의 필터 SSoT), 병합하면 초기화가 아무 일도 하지 않게 된다.",
                       "handler": "navigate",
                       "params": {
                         "path": "/admin/schedules",
@@ -1670,11 +1671,11 @@
           "handler": "navigate",
           "params": {
             "path": "/admin/schedules",
-            "replace": true,
             "mergeQuery": true,
             "query": {
               "page": "{{$args[0]}}"
             },
+            "replace": true,
             "transition_overlay_target": "schedules_data_grid__body"
           }
         },

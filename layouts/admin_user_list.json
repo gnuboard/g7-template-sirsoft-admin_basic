@@ -69,11 +69,13 @@
     ],
     "named_actions": {
         "searchUsers": {
+            "comment": "검색 실행 — 열거한 검색 조건만 덮어쓰고 정렬/페이지당 개수 등 나머지 목록 상태는 유지한다. page 는 새 검색이므로 1페이지로 되돌린다 (#75).",
             "handler": "navigate",
             "params": {
                 "path": "/admin/users",
                 "mergeQuery": true,
                 "query": {
+                    "page": "",
                     "filters[0][field]": "{{_local.searchField || 'all'}}",
                     "filters[0][value]": "{{_local.searchQuery || undefined}}",
                     "filters[0][operator]": "like"
@@ -118,11 +120,13 @@
                                 },
                                 "actions": [
                                     {
+                                        "comment": "새로고침은 보고 있던 목록을 그대로 다시 부르는 것이다 — 페이지와 걸어둔 검색 조건을 유지한다 (#75).",
                                         "type": "click",
                                         "handler": "navigate",
                                         "params": {
                                             "path": "/admin/users",
-                                            "mergeQuery": false
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     }
                                 ]
@@ -137,10 +141,13 @@
                                 },
                                 "actions": [
                                     {
+                                        "comment": "등록 폼은 회원 목록 클러스터 안이다 — 취소하고 돌아왔을 때 보고 있던 페이지·검색 조건이 그대로여야 한다 (#75).",
                                         "type": "click",
                                         "handler": "navigate",
                                         "params": {
-                                            "path": "/admin/users/create"
+                                            "path": "/admin/users/create",
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     }
                                 ],
@@ -1050,15 +1057,21 @@
                                 "handler": "switch",
                                 "cases": {
                                     "view": {
+                                        "comment": "상세는 회원 목록 클러스터 안이다 — 돌아왔을 때 보고 있던 페이지·검색 조건이 그대로여야 한다 (#75).",
                                         "handler": "navigate",
                                         "params": {
-                                            "path": "/admin/users/{{$args[1].uuid}}"
+                                            "path": "/admin/users/{{$args[1].uuid}}",
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     },
                                     "edit": {
+                                        "comment": "수정 폼도 같은 클러스터다 — 취소하고 돌아왔을 때 목록 상태가 살아 있어야 한다 (#75).",
                                         "handler": "navigate",
                                         "params": {
-                                            "path": "/admin/users/{{$args[1].uuid}}/edit"
+                                            "path": "/admin/users/{{$args[1].uuid}}/edit",
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     },
                                     "delete": {
@@ -1187,7 +1200,7 @@
                                                     "params": {
                                                         "path": "/admin/users",
                                                         "mergeQuery": true,
-                                                        "query": []
+                                                        "query": {}
                                                     }
                                                 },
                                                 {
@@ -1342,7 +1355,7 @@
                                                     "params": {
                                                         "path": "/admin/users",
                                                         "mergeQuery": true,
-                                                        "query": []
+                                                        "query": {}
                                                     }
                                                 },
                                                 {
@@ -1706,7 +1719,7 @@
                                                     "params": {
                                                         "path": "/admin/users",
                                                         "mergeQuery": true,
-                                                        "query": []
+                                                        "query": {}
                                                     }
                                                 },
                                                 {
@@ -1861,7 +1874,7 @@
                                                     "params": {
                                                         "path": "/admin/users",
                                                         "mergeQuery": true,
-                                                        "query": []
+                                                        "query": {}
                                                     }
                                                 },
                                                 {
