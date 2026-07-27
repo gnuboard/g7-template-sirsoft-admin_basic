@@ -394,11 +394,13 @@
       "detail": "Details",
       "cancel": "Cancel",
       "close": "Close",
+      "reinstall": "Reinstall",
       "preview_manifest": "Preview manifest"
     },
     "search_placeholder": "Search by identifier, vendor, or language",
     "badge": {
-      "update_available": "Update available"
+      "update_available": "Update available",
+      "files_missing": "Files missing"
     },
     "banner": {
       "scoped": "Showing language packs for {{scope}} \"{{target}}\" only.",

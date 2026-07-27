@@ -801,6 +801,16 @@
                                   {
                                     "type": "basic",
                                     "name": "Span",
+                                    "if": "{{row.files_missing === true}}",
+                                    "props": {
+                                      "className": "px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded",
+                                      "data-testid": "lp-drift-badge"
+                                    },
+                                    "text": "$t:admin.language_packs.badge.files_missing"
+                                  },
+                                  {
+                                    "type": "basic",
+                                    "name": "Span",
                                     "if": "{{row.has_update === true && row.status !== 'uninstalled'}}",
                                     "props": {
                                       "className": "px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded"
@@ -987,7 +997,8 @@
                                         "handler": "setState",
                                         "params": {
                                           "target": "global",
-                                          "selectedBundledLanguagePack": "{{row}}"
+                                          "selectedBundledLanguagePack": "{{row}}",
+                                          "languagePackReinstallMode": false
                                         }
                                       },
                                       {
@@ -1010,6 +1021,52 @@
                                     "type": "basic",
                                     "name": "Span",
                                     "text": "$t:admin.language_packs.actions.install"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "basic",
+                                "name": "Button",
+                                "if": "{{row.files_missing === true && row.bundled_source_available === true && row.abilities?.can_install === true}}",
+                                "props": {
+                                  "type": "button",
+                                  "title": "$t:admin.language_packs.actions.reinstall",
+                                  "data-testid": "lp-reinstall-button",
+                                  "className": "flex-center gap-2 px-4 py-2 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                                },
+                                "actions": [
+                                  {
+                                    "type": "click",
+                                    "handler": "sequence",
+                                    "actions": [
+                                      {
+                                        "handler": "setState",
+                                        "params": {
+                                          "target": "global",
+                                          "selectedBundledLanguagePack": "{{row}}",
+                                          "languagePackReinstallMode": true
+                                        }
+                                      },
+                                      {
+                                        "handler": "openModal",
+                                        "target": "language_pack_install_bundled_modal"
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "type": "basic",
+                                    "name": "Icon",
+                                    "props": {
+                                      "name": "fas fa-rotate",
+                                      "size": "sm"
+                                    }
+                                  },
+                                  {
+                                    "type": "basic",
+                                    "name": "Span",
+                                    "text": "$t:admin.language_packs.actions.reinstall"
                                   }
                                 ]
                               },
