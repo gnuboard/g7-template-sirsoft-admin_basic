@@ -398,11 +398,13 @@
       "detail": "상세 보기",
       "cancel": "취소",
       "close": "닫기",
+      "reinstall": "재설치",
       "preview_manifest": "manifest 미리보기"
     },
     "search_placeholder": "식별자/벤더/언어로 검색",
     "badge": {
-      "update_available": "업데이트 가능"
+      "update_available": "업데이트 가능",
+      "files_missing": "파일 없음"
     },
     "banner": {
       "scoped": "{{scope}} \"{{target}}\"의 언어팩만 보고 있습니다.",
