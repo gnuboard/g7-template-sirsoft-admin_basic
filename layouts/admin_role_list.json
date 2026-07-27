@@ -129,7 +129,9 @@
                                         "type": "click",
                                         "handler": "navigate",
                                         "params": {
-                                            "path": "/admin/roles/create"
+                                            "path": "/admin/roles/create",
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     }
                                 ],
@@ -195,6 +197,7 @@
                                         "handler": "navigate",
                                         "params": {
                                             "path": "/admin/roles",
+                                            "mergeQuery": true,
                                             "query": {
                                                 "search": "{{_local.searchQuery || undefined}}",
                                                 "page": 1
@@ -451,11 +454,11 @@
                                 "handler": "navigate",
                                 "params": {
                                     "path": "/admin/roles",
-                                    "replace": true,
                                     "mergeQuery": true,
                                     "query": {
                                         "page": "{{$args[0]}}"
                                     },
+                                    "replace": true,
                                     "transition_overlay_target": "roles_data_grid__body"
                                 }
                             },
@@ -467,13 +470,16 @@
                                     "edit": {
                                         "handler": "navigate",
                                         "params": {
-                                            "path": "/admin/roles/{{$args[1].id}}/edit"
+                                            "path": "/admin/roles/{{$args[1].id}}/edit",
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     },
                                     "clone": {
                                         "handler": "navigate",
                                         "params": {
                                             "path": "/admin/roles/create",
+                                            "mergeQuery": true,
                                             "query": {
                                                 "clone_from": "{{$args[1].id}}"
                                             }

@@ -81,7 +81,7 @@
             "handler": "navigate",
             "params": {
                 "path": "/admin/activity-logs",
-                "replace": true,
+                "mergeQuery": true,
                 "query": {
                     "page": 1,
                     "search": "{{_local.filter.search || undefined}}",
@@ -91,6 +91,7 @@
                     "date_from": "{{_local.filter.dateFrom || undefined}}",
                     "date_to": "{{_local.filter.dateTo || undefined}}"
                 },
+                "replace": true,
                 "transition_overlay_target": "activity_log_datagrid__body"
             }
         }
@@ -148,7 +149,8 @@
                                         "handler": "navigate",
                                         "params": {
                                             "path": "/admin/activity-logs",
-                                            "mergeQuery": false
+                                            "mergeQuery": true,
+                                            "query": {}
                                         }
                                     }
                                 ],
@@ -232,13 +234,13 @@
                                                         "handler": "navigate",
                                                         "params": {
                                                             "path": "/admin/activity-logs",
-                                                            "replace": true,
                                                             "mergeQuery": true,
                                                             "query": {
                                                                 "sort_by": "created_at",
                                                                 "sort_order": "{{$event.target.value.split('_').pop()}}",
                                                                 "page": 1
                                                             },
+                                                            "replace": true,
                                                             "transition_overlay_target": "activity_log_datagrid__body"
                                                         }
                                                     }
@@ -276,12 +278,12 @@
                                                         "handler": "navigate",
                                                         "params": {
                                                             "path": "/admin/activity-logs",
-                                                            "replace": true,
                                                             "mergeQuery": true,
                                                             "query": {
                                                                 "per_page": "{{$event.target.value}}",
                                                                 "page": 1
                                                             },
+                                                            "replace": true,
                                                             "transition_overlay_target": "activity_log_datagrid__body"
                                                         }
                                                     }

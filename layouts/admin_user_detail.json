@@ -133,7 +133,9 @@
                             "type": "click",
                             "handler": "navigate",
                             "params": {
-                              "path": "/admin/users/{{route?.id}}/edit"
+                              "path": "/admin/users/{{route?.id}}/edit",
+                              "mergeQuery": true,
+                              "query": {}
                             }
                           }
                         ],

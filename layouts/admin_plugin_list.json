@@ -617,6 +617,7 @@
                                         "handler": "navigate",
                                         "params": {
                                             "path": "/admin/plugins",
+                                            "mergeQuery": true,
                                             "query": {
                                                 "search": "{{_local.searchQuery || undefined}}",
                                                 "page": 1
@@ -1268,6 +1269,7 @@
                                                                                             "handler": "switch",
                                                                                             "cases": {
                                                                                                 "settings": {
+                                                                                                    "comment": "audit:allow layout-list-context-navigate-merge-query 플러그인 설정 화면으로 이동 — 목적지는 각 플러그인이 선언한 임의 경로로, 플러그인 목록 클러스터 밖이다.",
                                                                                                     "handler": "navigate",
                                                                                                     "params": {
                                                                                                         "path": "{{row.settings_route}}"
@@ -1292,7 +1294,9 @@
                                                                                                 "manage_language_packs": {
                                                                                                     "handler": "navigate",
                                                                                                     "params": {
-                                                                                                        "path": "/admin/plugins/{{row.identifier}}/language-packs"
+                                                                                                        "path": "/admin/plugins/{{row.identifier}}/language-packs",
+                                                                                                        "mergeQuery": true,
+                                                                                                        "query": {}
                                                                                                     }
                                                                                                 },
                                                                                                 "view_detail": {

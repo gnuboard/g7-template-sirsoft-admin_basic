@@ -608,6 +608,7 @@
                                         "handler": "navigate",
                                         "params": {
                                             "path": "/admin/modules",
+                                            "mergeQuery": true,
                                             "query": {
                                                 "search": "{{_local.searchQuery || undefined}}",
                                                 "page": 1
@@ -1314,7 +1315,9 @@
                                                                                                 "manage_language_packs": {
                                                                                                     "handler": "navigate",
                                                                                                     "params": {
-                                                                                                        "path": "/admin/modules/{{row.identifier}}/language-packs"
+                                                                                                        "path": "/admin/modules/{{row.identifier}}/language-packs",
+                                                                                                        "mergeQuery": true,
+                                                                                                        "query": {}
                                                                                                     }
                                                                                                 },
                                                                                                 "uninstall": {
