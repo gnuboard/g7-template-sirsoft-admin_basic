@@ -115,7 +115,7 @@
                       "handler": "setState",
                       "params": {
                         "target": "local",
-                        "form.notifications.channels": "{{(_local.form?.notifications?.channels ?? []).map(c => c.id === ch.id ? {...c, is_active: !c.is_active} : c)}}",
+                        "form.notifications.channels": "{{(_local.form?.notifications?.channels ?? []).some(c => c.id === ch.id) ? (_local.form?.notifications?.channels ?? []).map(c => c.id === ch.id ? {...c, is_active: !c.is_active} : c) : [...(_local.form?.notifications?.channels ?? []), {id: ch.id, is_active: true, sort_order: (_local.form?.notifications?.channels ?? []).length + 1}]}}",
                         "hasChanges": true
                       }
                     }
@@ -139,7 +139,7 @@
           "type": "basic",
           "name": "Button",
           "iteration": {
-            "source": "{{(availableChannels?.data?.channels ?? []).filter(c => (_local.form?.notifications?.channels ?? []).find(nc => nc.id === c.id)?.is_active !== false)}}",
+            "source": "{{(availableChannels?.data?.channels ?? []).filter(c => c.source === 'core' ? (_local.form?.notifications?.channels ?? []).find(nc => nc.id === c.id)?.is_active !== false : (_local.form?.notifications?.channels ?? []).find(nc => nc.id === c.id)?.is_active === true)}}",
             "item_var": "ch",
             "index_var": "chIdx"
           },
@@ -500,6 +500,15 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "comment": "알림 정의 행 하단 확장 슬롯(범용). 각 소유 확장이 알림별 부가 UI(예: 채널 연동)를 이 자리에 주입한다. 특정 확장을 알지 못하며, 확장 미설치 시 빈 자리로 남는다. def·현재 채널을 extensionPointProps 로 전달한다.",
+                                  "type": "extension_point",
+                                  "name": "notification_definition_row_footer",
+                                  "props": {
+                                    "definition": "{{def}}",
+                                    "activeChannel": "{{_local.activeNotificationChannel ?? query.channel ?? 'mail'}}"
+                                  }
                                 }
                               ]
                             },
