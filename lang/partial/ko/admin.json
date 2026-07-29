@@ -1492,6 +1492,9 @@
       "require_password_special_char": "특수문자 필수",
       "require_password_special_char_label": "비밀번호에 특수문자를 반드시 포함",
       "require_password_special_char_hint": "켜면 새로 설정하는 비밀번호에 특수문자가 최소 1개 필요합니다.",
+      "two_factor_auth": "2단계 인증",
+      "two_factor_auth_label": "로그인 시 인증번호를 한 번 더 확인",
+      "two_factor_auth_hint": "켜면 비밀번호 확인 뒤 가입 메일로 인증번호를 보내고, 그 번호를 입력해야 로그인이 완료됩니다.",
       "ip_throttle_floor_hint": "IP 단위 요청 제한은 이 값의 6배로 적용되며, 분당 최소 30회는 항상 보장됩니다."
     },
     "identity": {

@@ -1488,6 +1488,9 @@
       "require_password_special_char": "Require special character",
       "require_password_special_char_label": "Require at least one special character",
       "require_password_special_char_hint": "When enabled, newly set passwords must contain at least one special character.",
+      "two_factor_auth": "Two-factor authentication",
+      "two_factor_auth_label": "Require a verification code at sign-in",
+      "two_factor_auth_hint": "When enabled, a verification code is emailed after the password check and must be entered to finish signing in.",
       "ip_throttle_floor_hint": "The per-IP request limit is six times this value, with a guaranteed floor of 30 requests per minute."
     },
     "identity": {

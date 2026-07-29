@@ -466,6 +466,41 @@
                   "text": "$t:admin.settings.security.require_password_special_char_hint"
                 }
               ]
+            },
+            {
+              "id": "field_two_factor_auth",
+              "type": "basic",
+              "name": "Div",
+              "props": {
+                "className": ""
+              },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Label",
+                  "props": {
+                    "className": "form-label"
+                  },
+                  "text": "$t:admin.settings.security.two_factor_auth"
+                },
+                {
+                  "type": "basic",
+                  "name": "Checkbox",
+                  "props": {
+                    "name": "security.two_factor_auth",
+                    "disabled": "{{_computed.isReadOnly}}",
+                    "label": "$t:admin.settings.security.two_factor_auth_label"
+                  }
+                },
+                {
+                  "type": "basic",
+                  "name": "P",
+                  "props": {
+                    "className": "text-hint mt-1"
+                  },
+                  "text": "$t:admin.settings.security.two_factor_auth_hint"
+                }
+              ]
             }
           ]
         }
