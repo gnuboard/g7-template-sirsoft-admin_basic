@@ -257,7 +257,8 @@
         "last_login_at": "마지막 로그인",
         "ip_address": "IP",
         "country_select": "국가 선택",
-        "country_search": "국가 검색..."
+        "country_search": "국가 검색...",
+        "lock_status": "계정 잠금 상태"
       },
       "verification": {
         "method": "본인확인방법",
@@ -339,7 +340,13 @@
         "profile_memo": "프로필/메모",
         "activity_info": "활동정보",
         "consent_info": "동의이력"
-      }
+      },
+      "unlock": "잠금 해제",
+      "unlock_success": "계정 잠금이 해제되었습니다.",
+      "lock_status": "계정 잠금 상태",
+      "locked_permanently_value": "잠김 (무기한 — 관리자 해제 필요)",
+      "locked_until_value": "잠김 ({{until}} 까지)",
+      "not_locked_value": "정상"
     }
   },
   "language_packs": {
@@ -1479,7 +1486,13 @@
       "app_key_desc": "암호화에 사용되는 어플리케이션 키를 관리합니다.",
       "current_app_key": "현재 키",
       "regenerate_key": "키 재생성",
-      "app_key_warning": "키를 변경하면 기존 암호화된 데이터에 접근할 수 없게 될 수 있습니다."
+      "app_key_warning": "키를 변경하면 기존 암호화된 데이터에 접근할 수 없게 될 수 있습니다.",
+      "password_min_length": "비밀번호 최소 길이",
+      "password_min_length_hint": "회원가입·비밀번호 변경·재설정에 적용됩니다. 로그인에는 적용되지 않습니다(기존 비밀번호로 로그인할 수 없게 되는 것을 막기 위함).",
+      "require_password_special_char": "특수문자 필수",
+      "require_password_special_char_label": "비밀번호에 특수문자를 반드시 포함",
+      "require_password_special_char_hint": "켜면 새로 설정하는 비밀번호에 특수문자가 최소 1개 필요합니다.",
+      "ip_throttle_floor_hint": "IP 단위 요청 제한은 이 값의 6배로 적용되며, 분당 최소 30회는 항상 보장됩니다."
     },
     "identity": {
       "sub_tabs": {

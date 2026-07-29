@@ -260,8 +260,8 @@
                                     "type": "number",
                                     "name": "advanced.layout_cache_ttl",
                                     "placeholder": "3600",
-                                    "min": "0",
-                                    "max": "14400",
+                                    "min": "{{_local?.form?._meta?.limits?.advanced_cache_ttl_min ?? 0}}",
+                                    "max": "{{_local?.form?._meta?.limits?.advanced_cache_ttl_max ?? 14400}}",
                                     "disabled": "{{_computed.isReadOnly}}",
                                     "className": "input input-w-xs {{_local.errors?.['advanced.layout_cache_ttl'] ? 'input-error' : ''}}"
                                   }
@@ -405,8 +405,8 @@
                                     "type": "number",
                                     "name": "advanced.stats_cache_ttl",
                                     "placeholder": "1800",
-                                    "min": "0",
-                                    "max": "14400",
+                                    "min": "{{_local?.form?._meta?.limits?.advanced_cache_ttl_min ?? 0}}",
+                                    "max": "{{_local?.form?._meta?.limits?.advanced_cache_ttl_max ?? 14400}}",
                                     "disabled": "{{_computed.isReadOnly}}",
                                     "className": "input input-w-xs {{_local.errors?.['advanced.stats_cache_ttl'] ? 'input-error' : ''}}"
                                   }
@@ -550,8 +550,8 @@
                                     "type": "number",
                                     "name": "advanced.seo_cache_ttl",
                                     "placeholder": "7200",
-                                    "min": "0",
-                                    "max": "14400",
+                                    "min": "{{_local?.form?._meta?.limits?.advanced_cache_ttl_min ?? 0}}",
+                                    "max": "{{_local?.form?._meta?.limits?.advanced_cache_ttl_max ?? 14400}}",
                                     "disabled": "{{_computed.isReadOnly}}",
                                     "className": "input input-w-xs {{_local.errors?.['advanced.seo_cache_ttl'] ? 'input-error' : ''}}"
                                   }
@@ -668,8 +668,8 @@
                                     "type": "number",
                                     "name": "advanced.seo_sitemap_cache_ttl",
                                     "placeholder": "86400",
-                                    "min": "3600",
-                                    "max": "604800",
+                                    "min": "{{_local?.form?._meta?.limits?.advanced_seo_sitemap_cache_ttl_min ?? 3600}}",
+                                    "max": "{{_local?.form?._meta?.limits?.advanced_seo_sitemap_cache_ttl_max ?? 604800}}",
                                     "disabled": "{{_computed.isReadOnly}}",
                                     "className": "input input-w-xs {{_local.errors?.['advanced.seo_sitemap_cache_ttl'] ? 'input-error' : ''}}"
                                   }

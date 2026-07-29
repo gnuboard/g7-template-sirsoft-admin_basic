@@ -62,11 +62,15 @@ describe('환경설정 > SEO 탭 > Sitemap 생성 칸', () => {
     expect(field.props.type).toBe('number');
   });
 
-  it('분할 기준 칸의 허용 범위가 백엔드 검증 규칙(1000~50000)과 일치한다', () => {
+  // 허용 범위는 서버가 내려주는 한계값(_meta.limits)을 바인딩한다. 화면이 숫자를 직접 들면
+  // 저장 규칙이 바뀔 때 따라오지 못해 "화면은 받는데 저장에서 422" 가 된다.
+  it('분할 기준 칸의 허용 범위가 서버 한계값을 바인딩한다', () => {
     const field = findFieldByName(seoTab, 'seo.sitemap_urls_per_file');
 
-    expect(field.props.min).toBe(1000);
-    expect(field.props.max).toBe(50000);
+    expect(String(field.props.min)).toContain('_meta?.limits?.seo_sitemap_urls_per_file_min');
+    expect(String(field.props.max)).toContain('_meta?.limits?.seo_sitemap_urls_per_file_max');
+    expect(String(field.props.min)).toContain('?? 1000');
+    expect(String(field.props.max)).toContain('?? 50000');
   });
 
   it('압축 칸이 seo.sitemap_gzip Toggle 로 존재한다', () => {
@@ -130,8 +134,17 @@ describe('환경설정 > 고급 탭 > Sitemap 캐시 기준값 칸', () => {
     const advancedField = findFieldByName(advancedTab, 'advanced.seo_sitemap_cache_ttl');
     const seoOverrideField = findFieldByName(seoTab, 'seo.sitemap_cache_ttl');
 
-    expect(Number(advancedField.props.min)).toBe(Number(seoOverrideField.props.min));
-    expect(Number(advancedField.props.max)).toBe(Number(seoOverrideField.props.max));
+    // 두 칸 모두 서버 한계값 바인딩이므로 숫자 캐스팅은 NaN 이 된다(NaN === NaN 으로 통과해
+    // 버리는 함정). 바인딩이 비어 있을 때 쓰는 폴백 숫자로 두 칸의 범위가 같은지 판정한다.
+    const fallbackOf = (value: unknown): number => {
+      const matched = /\?\?\s*([\d.]+)/.exec(String(value));
+      expect(matched, `한계값 바인딩의 폴백을 찾지 못했습니다: ${String(value)}`).not.toBeNull();
+
+      return Number(matched![1]);
+    };
+
+    expect(fallbackOf(advancedField.props.min)).toBe(fallbackOf(seoOverrideField.props.min));
+    expect(fallbackOf(advancedField.props.max)).toBe(fallbackOf(seoOverrideField.props.max));
   });
 
   it('Sitemap 캐시 칸이 읽기 전용 상태와 검증 오류를 형제 칸과 동일하게 반영한다', () => {
