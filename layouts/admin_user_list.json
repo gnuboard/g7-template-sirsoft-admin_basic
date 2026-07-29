@@ -69,18 +69,19 @@
     ],
     "named_actions": {
         "searchUsers": {
-            "comment": "검색 실행 — 열거한 검색 조건만 덮어쓰고 정렬/페이지당 개수 등 나머지 목록 상태는 유지한다. page 는 새 검색이므로 1페이지로 되돌린다 (#75).",
+            "comment": "검색 실행 — 열거한 검색 조건만 덮어쓰고 정렬/페이지당 개수 등 나머지 목록 상태는 유지한다. page 는 새 검색이므로 1페이지로 되돌린다 (#75). 검색도 표를 다시 그리므로 페이지 이동과 동일하게 표 본문에 전환 오버레이를 건다 (#245). transition_overlay_target 은 replace:true 인 navigate 에서만 읽히므로 함께 둔다.",
             "handler": "navigate",
             "params": {
                 "path": "/admin/users",
                 "mergeQuery": true,
+                "replace": true,
+                "transition_overlay_target": "users_data_grid__body",
                 "query": {
                     "page": "",
                     "filters[0][field]": "{{_local.searchField || 'all'}}",
                     "filters[0][value]": "{{_local.searchQuery || undefined}}",
                     "filters[0][operator]": "like"
-                },
-                "transition_overlay_target": "users_data_grid__body"
+                }
             }
         }
     },
@@ -777,6 +778,7 @@
                                                         "sort_order": "{{$event.target.value.split('_').pop()}}",
                                                         "page": 1
                                                     },
+                                                    "replace": true,
                                                     "transition_overlay_target": "users_data_grid__body"
                                                 }
                                             }
@@ -819,6 +821,7 @@
                                                         "per_page": "{{$event.target.value}}",
                                                         "page": 1
                                                     },
+                                                    "replace": true,
                                                     "transition_overlay_target": "users_data_grid__body"
                                                 }
                                             }
@@ -1049,6 +1052,7 @@
                                     "query": {
                                         "page": "{{$args[0]}}"
                                     },
+                                    "replace": true,
                                     "transition_overlay_target": "users_data_grid__body"
                                 }
                             },
@@ -1468,7 +1472,7 @@
                             "type": "basic",
                             "name": "Button",
                             "props": {
-                                "className": "flex-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed",
+                                "className": "flex-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed",
                                 "disabled": "{{_global.isDeleting}}"
                             },
                             "actions": [
@@ -1678,7 +1682,7 @@
                             "name": "Button",
                             "props": {
                                 "disabled": "{{_global.isProcessing}}",
-                                "className": "flex-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                "className": "flex-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                             },
                             "actions": [
                                 {
@@ -1833,7 +1837,7 @@
                             "name": "Button",
                             "props": {
                                 "disabled": "{{_global.isProcessing}}",
-                                "className": "flex-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                "className": "flex-center gap-2 px-4 py-2 bg-yellow-600 dark:bg-yellow-700 text-white rounded-lg hover:bg-yellow-700 dark:hover:bg-yellow-800 disabled:opacity-50 disabled:cursor-not-allowed"
                             },
                             "actions": [
                                 {

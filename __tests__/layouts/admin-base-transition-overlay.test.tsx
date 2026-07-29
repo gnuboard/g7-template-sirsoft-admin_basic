@@ -212,6 +212,50 @@ describe('목록 페이지 페이지네이션 transition_overlay_target 가드 (
     }
 });
 
+describe('transition_overlay_target 은 replace:true 와 함께여야 한다 (이슈 #245)', () => {
+    /**
+     * 엔진은 `params.replace === true` 인 navigate 만 `G7Core.updateQueryParams(path, { transitionOverlayTarget })`
+     * 를 태운다(`ActionDispatcher.handleNavigate`). replace 가 없으면 React Router 경로로 빠져
+     * `transition_overlay_target` 이 **읽히지도 않는다** — 오버레이 대상 지정이 조용히 무효가 된다.
+     *
+     * 브라우저 실측(2026-07-29): `admin_identity_logs` 검색은
+     * `updateQueryParams('/admin/identity/logs?...', { transitionOverlayTarget: 'identity_log_datagrid__body' })`
+     * 가 호출되는 반면, `admin_user_list` 검색은 `updateQueryParams` 호출이 **0회**였다.
+     *
+     * 앞선 가드는 `transition_overlay_target` 의 존재와 값만 검사해, 무효 상태를 통과시켰다.
+     */
+    function findOverlayNavigates(node: any, out: any[] = []): any[] {
+        if (!node || typeof node !== 'object') return out;
+        if (node.handler === 'navigate' && node.params && typeof node.params.transition_overlay_target === 'string') {
+            out.push(node);
+        }
+        for (const key of Object.keys(node)) {
+            const v = node[key];
+            if (Array.isArray(v)) for (const item of v) findOverlayNavigates(item, out);
+            else if (v && typeof v === 'object') findOverlayNavigates(v, out);
+        }
+        return out;
+    }
+
+    const layoutFiles = fs.readdirSync(LAYOUTS_DIR).filter((f) => f.endsWith('.json'));
+
+    for (const file of layoutFiles) {
+        const layout = JSON.parse(fs.readFileSync(path.join(LAYOUTS_DIR, file), 'utf-8'));
+        const navigates = findOverlayNavigates(layout);
+        if (navigates.length === 0) continue;
+
+        it(`${file}: transition_overlay_target 을 쓰는 navigate 는 replace:true 여야 한다`, () => {
+            for (let i = 0; i < navigates.length; i++) {
+                const p = navigates[i].params;
+                expect(
+                    p.replace,
+                    `${file} navigate[${i}] (target="${p.transition_overlay_target}"): replace:true 가 없어 오버레이 대상 지정이 무효다`
+                ).toBe(true);
+            }
+        });
+    }
+});
+
 describe('채널 서브 탭 transition_overlay_target 가드 (이슈 #245, engine-v1.36.0)', () => {
     /**
      * 환경설정 알림 탭 안의 채널 서브 탭 클릭 시 채널 콘텐츠 영역에만 spinner 가

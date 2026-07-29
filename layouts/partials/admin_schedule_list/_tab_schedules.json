@@ -358,6 +358,7 @@
                           "type": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -430,6 +431,7 @@
                           "frequency": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -487,6 +489,7 @@
                               "created_from": "{{$event.target.value}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -527,6 +530,7 @@
                               "created_to": "{{$event.target.value}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -561,6 +565,7 @@
                               "created_to": "{{new Date().toISOString().split('T')[0]}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -585,6 +590,7 @@
                               "created_to": "{{new Date().toISOString().split('T')[0]}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -609,6 +615,7 @@
                               "created_to": "{{new Date().toISOString().split('T')[0]}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -633,6 +640,7 @@
                               "created_to": "{{new Date().toISOString().split('T')[0]}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -657,6 +665,7 @@
                               "created_to": "{{new Date().toISOString().split('T')[0]}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -681,6 +690,7 @@
                               "created_to": "{{new Date().toISOString().split('T')[0]}}",
                               "page": 1
                             },
+                            "replace": true,
                             "transition_overlay_target": "schedules_data_grid__body"
                           }
                         }
@@ -739,6 +749,7 @@
                           "status": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -814,6 +825,7 @@
                           "last_result": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -870,6 +882,7 @@
                           "without_overlapping": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -926,6 +939,7 @@
                           "run_in_maintenance": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -974,6 +988,7 @@
                           "module": "{{$event.target.value}}",
                           "page": 1
                         },
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -1074,6 +1089,7 @@
                       "params": {
                         "path": "/admin/schedules",
                         "query": {},
+                        "replace": true,
                         "transition_overlay_target": "schedules_data_grid__body"
                       }
                     }
@@ -1303,6 +1319,7 @@
                       "sort_order": "{{$event.target.value.split('_').pop()}}",
                       "page": 1
                     },
+                    "replace": true,
                     "transition_overlay_target": "schedules_data_grid__body"
                   }
                 }
@@ -1345,6 +1362,7 @@
                       "per_page": "{{$event.target.value}}",
                       "page": 1
                     },
+                    "replace": true,
                     "transition_overlay_target": "schedules_data_grid__body"
                   }
                 }
