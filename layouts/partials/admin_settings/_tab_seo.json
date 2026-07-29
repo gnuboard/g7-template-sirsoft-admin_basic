@@ -206,8 +206,7 @@
                       "text": "$t:admin.settings.seo.generator_enabled_desc"
                     }
                   ],
-                  "props": {
-                  }
+                  "props": {}
                 },
                 {
                   "type": "composite",
@@ -350,8 +349,8 @@
                       "props": {
                         "type": "number",
                         "name": "seo.og_image_default_width",
-                        "min": "0",
-                        "max": "8000",
+                        "min": "{{_local?.form?._meta?.limits?.seo_og_image_default_width_min ?? 0}}",
+                        "max": "{{_local?.form?._meta?.limits?.seo_og_image_default_width_max ?? 8000}}",
                         "placeholder": "1200",
                         "disabled": "{{_computed.isReadOnly}}",
                         "className": ""
@@ -377,8 +376,8 @@
                       "props": {
                         "type": "number",
                         "name": "seo.og_image_default_height",
-                        "min": "0",
-                        "max": "8000",
+                        "min": "{{_local?.form?._meta?.limits?.seo_og_image_default_height_min ?? 0}}",
+                        "max": "{{_local?.form?._meta?.limits?.seo_og_image_default_height_max ?? 8000}}",
                         "placeholder": "630",
                         "disabled": "{{_computed.isReadOnly}}",
                         "className": ""
@@ -766,8 +765,8 @@
                   "props": {
                     "type": "number",
                     "name": "seo.cache_ttl",
-                    "min": 60,
-                    "max": 86400,
+                    "min": "{{_local?.form?._meta?.limits?.seo_cache_ttl_min ?? 60}}",
+                    "max": "{{_local?.form?._meta?.limits?.seo_cache_ttl_max ?? 86400}}",
                     "placeholder": "7200",
                     "className": ""
                   }
@@ -947,8 +946,8 @@
                   "props": {
                     "type": "number",
                     "name": "seo.sitemap_cache_ttl",
-                    "min": 3600,
-                    "max": 604800,
+                    "min": "{{_local?.form?._meta?.limits?.seo_sitemap_cache_ttl_min ?? 3600}}",
+                    "max": "{{_local?.form?._meta?.limits?.seo_sitemap_cache_ttl_max ?? 604800}}",
                     "placeholder": "86400",
                     "className": ""
                   }
@@ -982,8 +981,8 @@
                   "props": {
                     "type": "number",
                     "name": "seo.sitemap_urls_per_file",
-                    "min": 1000,
-                    "max": 50000,
+                    "min": "{{_local?.form?._meta?.limits?.seo_sitemap_urls_per_file_min ?? 1000}}",
+                    "max": "{{_local?.form?._meta?.limits?.seo_sitemap_urls_per_file_max ?? 50000}}",
                     "placeholder": "50000",
                     "className": ""
                   }
@@ -1246,6 +1245,5 @@
       ]
     }
   ],
-  "props": {
-  }
+  "props": {}
 }

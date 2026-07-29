@@ -79,7 +79,8 @@
                     "filters[0][field]": "{{_local.searchField || 'all'}}",
                     "filters[0][value]": "{{_local.searchQuery || undefined}}",
                     "filters[0][operator]": "like"
-                }
+                },
+                "transition_overlay_target": "users_data_grid__body"
             }
         }
     },
