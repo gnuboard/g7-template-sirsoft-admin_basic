@@ -62,7 +62,8 @@ test.describe('@sirsoft-admin_basic 관리자 목록 컨텍스트 왕복 (#75)',
     await page.goto('/admin/templates/user?search=sirsoft&page=2');
     await page.waitForLoadState('networkidle', { timeout: 30_000 });
 
-    await page.locator('#tab_navigation').getByRole('button').nth(1).click();
+    // 탭은 WAI-ARIA 규약에 따라 role="tab" 으로 노출된다 (일반 button 이 아니다).
+    await page.locator('#tab_navigation').getByRole('tab').nth(1).click();
     await page.waitForURL(/\/admin\/templates\/admin/, { timeout: 30_000 });
 
     const q = queryOf(page.url());
