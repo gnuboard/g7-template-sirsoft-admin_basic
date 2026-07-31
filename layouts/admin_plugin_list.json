@@ -49,10 +49,12 @@
             "fallback": {
                 "data": {
                     "data": [],
-                    "current_page": 1,
-                    "last_page": 1,
-                    "per_page": 12,
-                    "total": 0
+                    "pagination": {
+                        "current_page": 1,
+                        "last_page": 1,
+                        "per_page": 12,
+                        "total": 0
+                    }
                 }
             }
         },
@@ -167,7 +169,7 @@
                                                         "handler": "toast",
                                                         "params": {
                                                             "type": "success",
-                                                            "message": "{{response.data?.update_count > 0 ? '$t:admin.plugins.check_updates_success|count=' + response.data.update_count : '$t:admin.plugins.check_updates_no_updates'}}"
+                                                            "message": "{{response.data?.updated_count > 0 ? '$t:admin.plugins.check_updates_success|count=' + response.data.updated_count : '$t:admin.plugins.check_updates_no_updates'}}"
                                                         }
                                                     }
                                                 ],
@@ -649,8 +651,8 @@
                                     "pagination": true,
                                     "alwaysShowPagination": true,
                                     "serverSidePagination": true,
-                                    "serverCurrentPage": "{{plugins?.data?.current_page ?? 1}}",
-                                    "serverTotalPages": "{{plugins?.data?.last_page ?? 1}}",
+                                    "serverCurrentPage": "{{plugins?.data?.pagination?.current_page ?? 1}}",
+                                    "serverTotalPages": "{{plugins?.data?.pagination?.last_page ?? 1}}",
                                     "cardClassName": "border border-gray-200 dark:border-gray-700 rounded-lg p-4 relative",
                                     "cardColumns": [
                                         {
@@ -1022,7 +1024,8 @@
                                                                                                 "pluginLayoutStrategy": "overwrite",
                                                                                                 "hasModifiedPluginLayouts": false,
                                                                                                 "modifiedPluginLayoutsCount": 0,
-                                                                                                "modifiedPluginLayouts": []
+                                                                                                "modifiedPluginLayouts": [],
+                                                                                                "modifiedPluginLayoutsCheckFailed": false
                                                                                             }
                                                                                         },
                                                                                         {
@@ -1039,7 +1042,17 @@
                                                                                                         "target": "global",
                                                                                                         "hasModifiedPluginLayouts": "{{response.data?.has_modified_layouts ?? false}}",
                                                                                                         "modifiedPluginLayoutsCount": "{{response.data?.modified_count ?? 0}}",
-                                                                                                        "modifiedPluginLayouts": "{{response.data?.modified_layouts ?? []}}"
+                                                                                                        "modifiedPluginLayouts": "{{response.data?.modified_layouts ?? []}}",
+                                                                                                        "modifiedPluginLayoutsCheckFailed": false
+                                                                                                    }
+                                                                                                }
+                                                                                            ],
+                                                                                            "onError": [
+                                                                                                {
+                                                                                                    "handler": "setState",
+                                                                                                    "params": {
+                                                                                                        "target": "global",
+                                                                                                        "modifiedPluginLayoutsCheckFailed": true
                                                                                                     }
                                                                                                 }
                                                                                             ]
@@ -1422,7 +1435,7 @@
                                     {
                                         "type": "basic",
                                         "name": "Span",
-                                        "text": "$t:admin.plugins.pagination_info|total={{plugins?.data?.total ?? 0}}|from={{((plugins?.data?.current_page ?? 1) - 1) * (plugins?.data?.per_page ?? 12) + 1}}|to={{Math.min((plugins?.data?.current_page ?? 1) * (plugins?.data?.per_page ?? 12), plugins?.data?.total ?? 0)}}"
+                                        "text": "$t:admin.plugins.pagination_info|total={{plugins?.data?.pagination?.total ?? 0}}|from={{((plugins?.data?.pagination?.current_page ?? 1) - 1) * (plugins?.data?.pagination?.per_page ?? 12) + 1}}|to={{Math.min((plugins?.data?.pagination?.current_page ?? 1) * (plugins?.data?.pagination?.per_page ?? 12), plugins?.data?.pagination?.total ?? 0)}}"
                                     }
                                 ]
                             }

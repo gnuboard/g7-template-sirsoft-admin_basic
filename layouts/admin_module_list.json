@@ -49,10 +49,12 @@
             "fallback": {
                 "data": {
                     "data": [],
-                    "current_page": 1,
-                    "last_page": 1,
-                    "per_page": 12,
-                    "total": 0
+                    "pagination": {
+                        "current_page": 1,
+                        "last_page": 1,
+                        "per_page": 12,
+                        "total": 0
+                    }
                 }
             }
         },
@@ -167,7 +169,7 @@
                                                         "handler": "toast",
                                                         "params": {
                                                             "type": "success",
-                                                            "message": "{{response.data?.update_count > 0 ? '$t:admin.modules.check_updates_success|count=' + response.data.update_count : '$t:admin.modules.check_updates_no_updates'}}"
+                                                            "message": "{{response.data?.updated_count > 0 ? '$t:admin.modules.check_updates_success|count=' + response.data.updated_count : '$t:admin.modules.check_updates_no_updates'}}"
                                                         }
                                                     }
                                                 ],
@@ -640,8 +642,8 @@
                                     "pagination": true,
                                     "alwaysShowPagination": true,
                                     "serverSidePagination": true,
-                                    "serverCurrentPage": "{{modules?.data?.current_page ?? 1}}",
-                                    "serverTotalPages": "{{modules?.data?.last_page ?? 1}}",
+                                    "serverCurrentPage": "{{modules?.data?.pagination?.current_page ?? 1}}",
+                                    "serverTotalPages": "{{modules?.data?.pagination?.last_page ?? 1}}",
                                     "cardClassName": "border border-gray-200 dark:border-gray-700 rounded-lg p-4 relative",
                                     "cardColumns": [
                                         {
@@ -1010,7 +1012,8 @@
                                                                                                 "moduleLayoutStrategy": "overwrite",
                                                                                                 "hasModifiedModuleLayouts": false,
                                                                                                 "modifiedModuleLayoutsCount": 0,
-                                                                                                "modifiedModuleLayouts": []
+                                                                                                "modifiedModuleLayouts": [],
+                                                                                                "modifiedModuleLayoutsCheckFailed": false
                                                                                             }
                                                                                         },
                                                                                         {
@@ -1027,7 +1030,17 @@
                                                                                                         "target": "global",
                                                                                                         "hasModifiedModuleLayouts": "{{response.data?.has_modified_layouts ?? false}}",
                                                                                                         "modifiedModuleLayoutsCount": "{{response.data?.modified_count ?? 0}}",
-                                                                                                        "modifiedModuleLayouts": "{{response.data?.modified_layouts ?? []}}"
+                                                                                                        "modifiedModuleLayouts": "{{response.data?.modified_layouts ?? []}}",
+                                                                                                        "modifiedModuleLayoutsCheckFailed": false
+                                                                                                    }
+                                                                                                }
+                                                                                            ],
+                                                                                            "onError": [
+                                                                                                {
+                                                                                                    "handler": "setState",
+                                                                                                    "params": {
+                                                                                                        "target": "global",
+                                                                                                        "modifiedModuleLayoutsCheckFailed": true
                                                                                                     }
                                                                                                 }
                                                                                             ]
@@ -1397,7 +1410,7 @@
                                     {
                                         "type": "basic",
                                         "name": "Span",
-                                        "text": "$t:admin.modules.pagination_info|total={{modules?.data?.total ?? 0}}|from={{((modules?.data?.current_page ?? 1) - 1) * (modules?.data?.per_page ?? 12) + 1}}|to={{Math.min((modules?.data?.current_page ?? 1) * (modules?.data?.per_page ?? 12), modules?.data?.total ?? 0)}}"
+                                        "text": "$t:admin.modules.pagination_info|total={{modules?.data?.pagination?.total ?? 0}}|from={{((modules?.data?.pagination?.current_page ?? 1) - 1) * (modules?.data?.pagination?.per_page ?? 12) + 1}}|to={{Math.min((modules?.data?.pagination?.current_page ?? 1) * (modules?.data?.pagination?.per_page ?? 12), modules?.data?.pagination?.total ?? 0)}}"
                                     }
                                 ]
                             }
