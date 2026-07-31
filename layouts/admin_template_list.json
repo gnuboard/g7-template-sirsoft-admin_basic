@@ -52,10 +52,12 @@
       "fallback": {
         "data": {
           "data": [],
-          "current_page": 1,
-          "last_page": 1,
-          "per_page": 12,
-          "total": 0
+          "pagination": {
+            "current_page": 1,
+            "last_page": 1,
+            "per_page": 12,
+            "total": 0
+          }
         }
       }
     },
@@ -170,7 +172,7 @@
                             "handler": "toast",
                             "params": {
                               "type": "success",
-                              "message": "{{response.data?.update_count > 0 ? '$t:admin.templates.check_updates_success|count=' + response.data.update_count : '$t:admin.templates.check_updates_no_updates'}}"
+                              "message": "{{response.data?.updated_count > 0 ? '$t:admin.templates.check_updates_success|count=' + response.data.updated_count : '$t:admin.templates.check_updates_no_updates'}}"
                             }
                           }
                         ],
