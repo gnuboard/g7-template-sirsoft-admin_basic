@@ -1013,7 +1013,8 @@
                                                                                                 "hasModifiedModuleLayouts": false,
                                                                                                 "modifiedModuleLayoutsCount": 0,
                                                                                                 "modifiedModuleLayouts": [],
-                                                                                                "modifiedModuleLayoutsCheckFailed": false
+                                                                                                "modifiedModuleLayoutsCheckFailed": false,
+                                                                                                "moduleRebuildSearchIndex": false
                                                                                             }
                                                                                         },
                                                                                         {

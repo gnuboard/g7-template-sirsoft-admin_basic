@@ -1331,7 +1331,7 @@
               "props": {
                 "name": "per_page",
                 "className": "w-20",
-                "value": "{{query.per_page || '10'}}",
+                "value": "{{query.per_page ?? '20'}}",
                 "options": [
                   {
                     "label": "$t:admin.schedules.per_page.10",
