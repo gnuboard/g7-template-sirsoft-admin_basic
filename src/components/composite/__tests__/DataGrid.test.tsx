@@ -1,7 +1,57 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { DataGrid, DataGridColumn } from '../DataGrid';
+
+/**
+ * 런타임의 `G7Core.useControllableState` 와 같은 계약을 갖는 테스트용 구현.
+ *
+ * 코어 훅(resources/js/core/hooks/useControllableState.ts)을 직접 임포트하면 코어와
+ * 템플릿이 각자의 node_modules/react 를 갖고 있어 React 사본이 둘이 되고 "Invalid hook
+ * call" 이 난다. vitest 설정에서 react 를 전역 alias 로 단일화하면 이 파일은 통과하지만
+ * 다른 레이아웃 테스트 300여 건이 깨진다(실측 확인).
+ *
+ * 이 테스트가 지키려는 것은 훅 내부 동작이 아니라 **DataGrid 가 정렬을 디스패치하는
+ * 방식** 이므로, 훅은 테스트의 React 로 같은 계약(낙관적 내부 상태 + onChange 콜백)만
+ * 재현하면 충분하다.
+ */
+function useControllableState<T>(
+  controlledValue: T | undefined,
+  defaultValue: T,
+  onChange?: (value: T) => void
+): [T, (value: T | ((prev: T) => T)) => void] {
+  const [internal, setInternal] = useState<T>(
+    controlledValue !== undefined ? controlledValue : defaultValue
+  );
+  const prevControlled = useRef(controlledValue);
+
+  useEffect(() => {
+    if (controlledValue !== undefined && controlledValue !== prevControlled.current) {
+      setInternal(controlledValue);
+    }
+    prevControlled.current = controlledValue;
+  }, [controlledValue]);
+
+  const setValue = useCallback(
+    (next: T | ((prev: T) => T)) => {
+      const resolved = typeof next === 'function' ? (next as (prev: T) => T)(internal) : next;
+      if (resolved === internal) return;
+      setInternal(resolved);
+      onChange?.(resolved);
+    },
+    [internal, onChange]
+  );
+
+  return [internal, setValue];
+}
+
+/** shallowArrayEqual 의 테스트용 동등 구현 */
+function shallowArrayEqual<T>(a: T[], b: T[]): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  return a.every((item, index) => item === b[index]);
+}
 
 // window.G7Core.useResponsive mock
 const mockUseResponsive = vi.fn(() => ({
@@ -298,6 +348,115 @@ describe('DataGrid', () => {
     expect(container.firstChild).toHaveClass('custom-grid');
   });
 
+  describe('서버 페이지네이션 목록의 헤더 정렬 (#492 D-18)', () => {
+    // 서버 페이지네이션이면 data 는 "전체 중 이번 페이지" 다. onSortChange 가 없으면
+    // 컴포넌트는 서버에 정렬을 요청할 수단이 없는데, 그 상태로 헤더를 누를 수 있게 두면
+    // 이 페이지 안에서만 순서가 바뀌고 화살표가 붙어 전체 정렬로 오인된다.
+    // 클릭이 실제로 정렬 상태를 바꾸는지 보려면 런타임과 같은 controllable-state 훅이
+    // 있어야 한다. 훅을 주입하지 않으면 클릭해도 상태가 안 바뀌어, 결함이 있어도
+    // "행 순서 그대로 / 화살표 없음" 이 성립해 테스트가 공허하게 통과한다.
+    describe('G7Core.useControllableState 주입 시 (런타임 경로)', () => {
+      beforeEach(() => {
+        (window as any).G7Core = {
+          ...(window as any).G7Core,
+          useControllableState,
+          shallowArrayEqual,
+        };
+      });
+
+      it('onSortChange 가 없으면 헤더 클릭이 현재 페이지를 정렬하지 않는다', async () => {
+        const user = userEvent.setup();
+
+        render(
+          <DataGrid
+            columns={mockColumns}
+            data={mockData}
+            sortable={true}
+            serverSidePagination={true}
+            serverCurrentPage={1}
+            serverTotalPages={5}
+          />
+        );
+
+        const before = screen.getAllByRole('row').slice(1).map((r) => r.textContent);
+
+        await user.click(screen.getByText('이름'));
+
+        const after = screen.getAllByRole('row').slice(1).map((r) => r.textContent);
+
+        expect(after).toEqual(before);
+      });
+
+      it('onSortChange 가 없으면 헤더에 정렬 화살표가 붙지 않는다', async () => {
+        const user = userEvent.setup();
+
+        render(
+          <DataGrid
+            columns={mockColumns}
+            data={mockData}
+            sortable={true}
+            serverSidePagination={true}
+            serverCurrentPage={1}
+            serverTotalPages={5}
+          />
+        );
+
+        await user.click(screen.getByText('이름'));
+
+        expect(screen.getByText('이름').parentElement).not.toContainHTML('↑');
+        expect(screen.getByText('이름').parentElement).not.toContainHTML('↓');
+      });
+    });
+
+    it('onSortChange 가 없으면 헤더에 클릭 가능 커서를 표시하지 않는다', () => {
+      render(
+        <DataGrid
+          columns={mockColumns}
+          data={mockData}
+          sortable={true}
+          serverSidePagination={true}
+          serverCurrentPage={1}
+          serverTotalPages={5}
+        />
+      );
+
+      expect(screen.getByText('이름').className).not.toContain('cursor-pointer');
+    });
+
+    it('onSortChange 가 배선돼 있으면 서버 정렬을 요청한다 (정상 경로는 유지)', async () => {
+      const user = userEvent.setup();
+      const onSortChange = vi.fn();
+
+      render(
+        <DataGrid
+          columns={mockColumns}
+          data={mockData}
+          sortable={true}
+          serverSidePagination={true}
+          serverCurrentPage={1}
+          serverTotalPages={5}
+          onSortChange={onSortChange}
+        />
+      );
+
+      expect(screen.getByText('이름').className).toContain('cursor-pointer');
+
+      await user.click(screen.getByText('이름'));
+
+      expect(onSortChange).toHaveBeenCalledWith('name', 'asc');
+    });
+
+    // 가드가 과하게 걸려 클라이언트 목록의 정렬까지 죽이면 안 된다.
+    // 서버 페이지네이션이 아니면 data 가 전체 집합이므로 컴포넌트 단독 정렬이 옳다.
+    it('서버 페이지네이션이 아니면 헤더 정렬 어포던스를 유지한다 (클라이언트 목록)', () => {
+      render(<DataGrid columns={mockColumns} data={mockData} sortable={true} />);
+
+      expect(screen.getByText('이름').className).toContain('cursor-pointer');
+      // sortable: false 인 컬럼은 원래대로 정렬 대상이 아니다
+      expect(screen.getByText('역할').className).not.toContain('cursor-pointer');
+    });
+  });
+
   describe('외부 정렬 제어 (sortField, sortDirection, onSortChange)', () => {
     it('외부에서 sortField와 sortDirection을 제어할 수 있음', () => {
       render(
@@ -414,6 +573,82 @@ describe('DataGrid', () => {
       expect(screen.getByText('이름')).toBeInTheDocument();
       expect(screen.getByText('이메일')).toBeInTheDocument();
       expect(screen.getByText('역할')).toBeInTheDocument();
+    });
+
+    // 회귀 가드 (#492 브라우저 실측): 런타임에는 G7Core.useControllableState 가 존재하므로
+    // handleSort 가 폴백(onSortChange 직접 호출) 대신 controllable-state 경로를 탄다.
+    // 이 훅을 주입하지 않은 테스트는 폴백만 검증하게 되어 런타임 결함을 통과시킨다.
+    // (실측: 이름 desc 상태에서 이메일 헤더 클릭 → 헤더는 `이메일↑`, 요청은 sort_by=name&sort_order=asc)
+    describe('G7Core.useControllableState 주입 시 (런타임 경로)', () => {
+      beforeEach(() => {
+        (window as any).G7Core = {
+          ...(window as any).G7Core,
+          useControllableState,
+          shallowArrayEqual,
+        };
+      });
+
+      it('다른 컬럼 헤더 클릭 시 새 컬럼 + asc 로 단 한 번만 디스패치된다', async () => {
+        const user = userEvent.setup();
+        const onSortChange = vi.fn();
+
+        render(
+          <DataGrid
+            columns={mockColumns}
+            data={mockData}
+            sortable={true}
+            sortField="name"
+            sortDirection="desc"
+            onSortChange={onSortChange}
+          />
+        );
+
+        await user.click(screen.getByText('이메일'));
+
+        // 이전 컬럼(name)이 섞인 디스패치가 있어서는 안 된다
+        expect(onSortChange).toHaveBeenCalledTimes(1);
+        expect(onSortChange).toHaveBeenCalledWith('email', 'asc');
+      });
+
+      it('동일 컬럼 재클릭 시 같은 컬럼 + 반대 방향으로 단 한 번만 디스패치된다', async () => {
+        const user = userEvent.setup();
+        const onSortChange = vi.fn();
+
+        render(
+          <DataGrid
+            columns={mockColumns}
+            data={mockData}
+            sortable={true}
+            sortField="name"
+            sortDirection="asc"
+            onSortChange={onSortChange}
+          />
+        );
+
+        await user.click(screen.getByText('이름'));
+
+        expect(onSortChange).toHaveBeenCalledTimes(1);
+        expect(onSortChange).toHaveBeenCalledWith('name', 'desc');
+      });
+
+      it('정렬되지 않은 상태에서 헤더 클릭 시 해당 컬럼 asc 로 디스패치된다', async () => {
+        const user = userEvent.setup();
+        const onSortChange = vi.fn();
+
+        render(
+          <DataGrid
+            columns={mockColumns}
+            data={mockData}
+            sortable={true}
+            onSortChange={onSortChange}
+          />
+        );
+
+        await user.click(screen.getByText('이메일'));
+
+        expect(onSortChange).toHaveBeenCalledTimes(1);
+        expect(onSortChange).toHaveBeenCalledWith('email', 'asc');
+      });
     });
 
     it('sortable이 false인 컬럼은 onSortChange가 호출되지 않음', async () => {

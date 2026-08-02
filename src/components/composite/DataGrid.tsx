@@ -660,20 +660,21 @@ export const DataGrid: React.FC<DataGridProps> = ({
 
   // 정렬 상태 - useControllableState 적용
   // 외부 제어(externalSortField)가 있으면 Controlled, 없으면 Uncontrolled
+  //
+  // 정렬은 "컬럼 + 방향" 한 쌍이 하나의 의미 단위다. 두 상태의 onChange 콜백에서 각각
+  // onSortChange 를 부르면, 각 콜백이 자기 렌더의 클로저에 잡힌 **반대쪽 이전 값**을 함께
+  // 실어보내 잘못된 조합이 디스패치된다 (setSortField 는 이전 방향을, setSortDirection 은
+  // 이전 컬럼을 보낸다). 헤더 클릭 한 번에 두 콜백이 연달아 불리므로 나중 것이 이겨
+  // "이름 desc → 이메일 헤더 클릭" 이 sort_by=name&sort_order=asc 로 나가고, 헤더 표시만
+  // 이메일↑ 이 되어 표시와 실제 정렬 기준이 어긋난다.
+  // 따라서 상태 setter 는 화살표 표시용 낙관적 갱신만 담당하고, 서버 디스패치는
+  // handleSort 에서 새 값 한 쌍으로 단 한 번 수행한다.
   const [sortField, setSortField] = useControllableState
-    ? useControllableState<string | null>(externalSortField, null, (value: string | null) => {
-        if (value !== null) {
-          onSortChange?.(value, sortDirection);
-        }
-      })
+    ? useControllableState<string | null>(externalSortField, null)
     : [externalSortField ?? null, () => {}];
 
   const [sortDirection, setSortDirection] = useControllableState
-    ? useControllableState<'asc' | 'desc'>(externalSortDirection, 'asc', (value: 'asc' | 'desc') => {
-        if (sortField !== null) {
-          onSortChange?.(sortField, value);
-        }
-      })
+    ? useControllableState<'asc' | 'desc'>(externalSortDirection, 'asc')
     : [externalSortDirection ?? 'asc', () => {}];
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -831,9 +832,20 @@ export const DataGrid: React.FC<DataGridProps> = ({
   // 값 비교 시 항상 앞으로 밀어 서버 ORDER BY 순서를 훼손한다.
   // onSortChange 가 없는 경우(uncontrolled)에만 컴포넌트가 단독 정렬 주체로서
   // 전달받은 로컬 데이터를 클라이언트에서 정렬한다.
+  // 헤더 클릭 정렬을 제공할 수 있는가.
+  //
+  // 서버 페이지네이션 목록에서 `onSortChange` 가 배선돼 있지 않으면 컴포넌트는 서버에
+  // 정렬을 요청할 방법이 없다. 그런데도 헤더를 누를 수 있게 두면 **현재 페이지 배열만**
+  // 정렬되고 화살표가 붙어, 전체 건수 기준으로 정렬된 것으로 오인된다 (#492 D-18).
+  // 정렬을 실제로 반영할 수 없는 화면에서는 정렬 가능한 척하지 않는다.
+  const headerSortEnabled = sortable && !(serverSidePagination && !onSortChange);
+
   const sortedData = useMemo(() => {
     if (!sortField || !sortable || !data) return data || [];
     if (onSortChange) return data;
+    // 서버 페이지네이션이면 data 는 "전체 중 이번 페이지" 다. 여기서 정렬하면 그 페이지
+    // 안에서만 순서가 바뀌는데 헤더 화살표는 전체 정렬처럼 보인다 (#492 D-18).
+    if (serverSidePagination) return data;
 
     return [...data].sort((a, b) => {
       const aValue = a[sortField];
@@ -844,7 +856,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
       const comparison = aValue > bValue ? 1 : -1;
       return sortDirection === 'asc' ? comparison : -comparison;
     });
-  }, [data, sortField, sortDirection, sortable, onSortChange]);
+  }, [data, sortField, sortDirection, sortable, onSortChange, serverSidePagination]);
 
   // 페이지네이션 처리
   const paginatedData = useMemo(() => {
@@ -872,21 +884,19 @@ export const DataGrid: React.FC<DataGridProps> = ({
 
   // 정렬 토글 (Phase 2-2: useControllableState로 단순화)
   const handleSort = (field: string) => {
-    if (!sortable) return;
+    if (!headerSortEnabled) return;
 
     const column = columns.find((col) => col.field === field);
     if (column?.sortable === false) return;
 
     const newDirection: 'asc' | 'desc' = sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
 
-    // useControllableState 사용 시: setter가 onChange 콜백 자동 호출
-    // 폴백 시: 직접 onSortChange 호출
-    if (useControllableState) {
-      setSortField(field);
-      setSortDirection(newDirection);
-    } else if (onSortChange) {
-      onSortChange(field, newDirection);
-    }
+    // 낙관적 갱신 — 헤더 화살표가 즉시 새 컬럼/방향을 가리키게 한다
+    setSortField(field);
+    setSortDirection(newDirection);
+
+    // 서버 디스패치는 새 값 한 쌍으로 정확히 한 번 (컬럼/방향이 섞이지 않는다)
+    onSortChange?.(field, newDirection);
   };
 
   // 전체 선택 처리
@@ -1336,12 +1346,12 @@ export const DataGrid: React.FC<DataGridProps> = ({
                 <Th
                   key={column.field}
                   className={`px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider ${
-                    sortable && column.sortable !== false
+                    headerSortEnabled && column.sortable !== false
                       ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600'
                       : ''
                   }`}
                   style={{ width: column.width, minWidth: column.width }}
-                  onClick={() => handleSort(column.field)}
+                  onClick={headerSortEnabled ? () => handleSort(column.field) : undefined}
                 >
                   {column.header}
                   {sortField === column.field && (

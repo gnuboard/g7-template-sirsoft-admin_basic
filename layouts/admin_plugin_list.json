@@ -1025,7 +1025,8 @@
                                                                                                 "hasModifiedPluginLayouts": false,
                                                                                                 "modifiedPluginLayoutsCount": 0,
                                                                                                 "modifiedPluginLayouts": [],
-                                                                                                "modifiedPluginLayoutsCheckFailed": false
+                                                                                                "modifiedPluginLayoutsCheckFailed": false,
+                                                                                                "pluginRebuildSearchIndex": false
                                                                                             }
                                                                                         },
                                                                                         {
