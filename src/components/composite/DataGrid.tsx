@@ -43,8 +43,18 @@ const logger = ((window as any).G7Core?.createLogger?.('Comp:DataGrid')) ?? {
 const t = (key: string, params?: Record<string, string | number>) =>
   (window as any).G7Core?.t?.(key, params) ?? key;
 
-// cellChildren 및 expandChildren 렌더링을 위한 컴포넌트 맵
-const componentMap: Record<string, React.ComponentType<any>> = {
+/**
+ * 반복 렌더 서브트리용 컴포넌트 맵 **폴백**.
+ *
+ * 정본은 템플릿 레지스트리(`G7Core.getComponentMap()`)다 — CardGrid 와 같은 출처를 쓴다.
+ * 이 열거는 런타임 전역이 아직 없는 상황(단위 테스트 등)에서만 쓰인다.
+ *
+ * 종전에는 이 열거가 유일한 출처였고, 등록된 117개 중 29개만 담고 있어 나머지 88개가
+ * `cellChildren`/`expandChildren`/`subRowChildren`/`footerCells` 안에서만 조용히 사라졌다.
+ * 실측: `/admin/identity/logs` 확장 행의 `Pre`(부가 정보 JSON)가 라벨만 남고 미렌더 —
+ * 같은 `Pre` 가 모달(DynamicRenderer 경로)에서는 정상 렌더돼 경로 비대칭이었다.
+ */
+const FALLBACK_COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   // basic 컴포넌트
   Div,
   Span,
@@ -77,6 +87,22 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   Badge,
   HtmlContent,
   ActionMenu,
+};
+
+/**
+ * 반복 렌더 서브트리에 넘길 컴포넌트 맵을 반환합니다.
+ *
+ * 템플릿 레지스트리 전체를 쓰므로 `components.json` 에 등록된 컴포넌트는 단발 렌더 경로와
+ * 반복 렌더 경로에서 **동일하게** 조회된다. 전역이 없으면 폴백 열거로 내려간다.
+ *
+ * @returns 컴포넌트명 → React 컴포넌트 맵
+ */
+const getComponentMap = (): Record<string, React.ComponentType<any>> => {
+  const registry = (window as any).G7Core?.getComponentMap?.();
+  if (registry && Object.keys(registry).length > 0) {
+    return registry;
+  }
+  return FALLBACK_COMPONENT_MAP;
 };
 
 export interface DataGridCellChild {
@@ -436,7 +462,11 @@ const safeRenderValue = (value: any): React.ReactNode => {
 
 /**
  * subRow 컨테이너의 표시 조건을 평가합니다.
- * JSX 인라인 조건에서 사용되므로 엔진 위임 불가 — 직접 평가합니다.
+ *
+ * 판정은 엔진(`G7Core.evaluateCondition`)에 위임합니다. 종전에는 이 파일이
+ * `new Function('row', ...)` 로 자체 평가기를 두어, `_local`/`_global` 을 참조하는
+ * 조건에서 예외가 나면 CardGrid 는 자식이 사라지고 DataGrid 는 항상 표시되는
+ * **반대 방향** 결과가 났습니다. 엔진 위임으로 두 컴포넌트의 판정이 같아집니다.
  *
  * @param condition 조건 문자열 (예: "{{row.charge_policy !== 'free'}}")
  * @param row 현재 행 데이터
@@ -445,21 +475,13 @@ const safeRenderValue = (value: any): React.ReactNode => {
 const evaluateSubRowCondition = (condition: string | undefined, row: any): boolean => {
   if (!condition) return true;
 
-  // {{...}} 패턴 추출
-  const match = condition.match(/^\{\{(.+)\}\}$/);
-  if (!match) return true;
-
-  const expr = match[1].trim();
-
-  try {
-    // row 컨텍스트에서 표현식 평가
-    // eslint-disable-next-line no-new-func
-    const evaluator = new Function('row', `return ${expr}`);
-    return !!evaluator(row);
-  } catch (error) {
-    logger.warn('subRow 조건 평가 실패:', condition, error);
-    return true;
+  const G7Core = (window as any).G7Core;
+  if (typeof G7Core?.evaluateCondition === 'function') {
+    return G7Core.evaluateCondition(condition, { row, item: row, $item: row });
   }
+
+  logger.warn('G7Core.evaluateCondition 미노출 — subRow 조건을 평가할 수 없습니다:', condition);
+  return true;
 };
 
 /**
@@ -486,7 +508,7 @@ const renderCellChildren = (
     return G7Core.renderItemChildren(
       cellChildren,
       context,
-      componentMap,
+      getComponentMap(),
       keyPrefix,
       componentContext ? { componentContext } : undefined
     );
@@ -494,6 +516,39 @@ const renderCellChildren = (
 
   logger.warn('G7Core.renderItemChildren을 사용할 수 없습니다.');
   return null;
+};
+
+/**
+ * 푸터 셀의 `text` 를 렌더링합니다.
+ *
+ * `components.json` 의 `skipBindingKeys` 에 `footerCells` 가 들어가면서 DynamicRenderer 는
+ * 이 키를 선평가하지 않는다 — 해석 책임이 반복 렌더 경로로 넘어왔다. 그런데 푸터 렌더는
+ * `children` 만 `renderCellChildren` 으로 넘기고 `text` 는 원문을 그대로 출력해 왔고,
+ * 그 결과 `{{order.data?.total_quantity ?? 0}}개` 같은 값이 화면에 노출됐다
+ * (실측: `/admin/ecommerce/orders/:orderNumber` 합계 행 3셀).
+ *
+ * 바인딩/번역 토큰이 없는 순수 문자열은 그대로 돌려주어 불필요한 래핑을 만들지 않는다.
+ *
+ * @param text 푸터 셀 텍스트 (바인딩 표현식 포함 가능)
+ * @param keyPrefix 키 접두사
+ * @param componentContext 컴포넌트 컨텍스트 (state/setState)
+ * @returns 해석된 React 노드
+ */
+const renderFooterCellText = (
+  text: string | undefined,
+  keyPrefix: string,
+  componentContext?: { state?: any; setState?: (updates: any) => void }
+): React.ReactNode => {
+  if (!text) return '';
+  if (!text.includes('{{') && !text.includes('$t:')) return text;
+
+  return renderCellChildren(
+    [{ type: 'basic', name: 'Span', text }],
+    {},
+    null,
+    keyPrefix,
+    componentContext
+  );
 };
 
 /**
@@ -521,7 +576,7 @@ const renderSubRowChildren = (
     return G7Core.renderItemChildren(
       subRowChildren,
       context,
-      componentMap,
+      getComponentMap(),
       keyPrefix,
       componentContext ? { componentContext } : undefined
     );
@@ -1033,7 +1088,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
           row,
           expandContext,
           componentContext: __componentContext,
-          componentMap,
+          componentMap: getComponentMap(),
           keyPrefix: `expand-${row[idField]}`,
         });
       }
@@ -1226,7 +1281,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
                         <Span className={cell.className || 'text-gray-900 dark:text-gray-100'}>
                           {cell.children && cell.children.length > 0
                             ? renderCellChildren(cell.children, {}, null, `footer-mobile-${idx}`, __componentContext)
-                            : cell.text || ''}
+                            : renderFooterCellText(cell.text, `footer-mobile-text-${idx}`, __componentContext)}
                         </Span>
                       </Div>
                     );
@@ -1543,7 +1598,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
                       >
                         {cell.children && cell.children.length > 0
                           ? renderCellChildren(cell.children, {}, null, `footer-${column.field}`, __componentContext)
-                          : cell.text || ''}
+                          : renderFooterCellText(cell.text, `footer-text-${column.field}`, __componentContext)}
                       </Td>
                     );
                   });

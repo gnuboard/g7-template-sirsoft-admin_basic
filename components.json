@@ -1182,7 +1182,7 @@
         "type": "composite",
         "description": "Data grid with sorting, filtering, and pagination",
         "path": "src/components/composite/DataGrid.tsx",
-        "skipBindingKeys": ["cellChildren", "expandChildren", "expandContext", "render", "subRowChildren", "subRowCondition"],
+        "skipBindingKeys": ["cellChildren", "expandChildren", "expandContext", "render", "subRowChildren", "subRowCondition", "footerCells", "footerCardChildren"],
         "props": {
           "columns": {
             "type": "array",
@@ -1235,17 +1235,17 @@
         "type": "composite",
         "description": "Card grid layout with automatic skeleton loading and pagination support",
         "path": "src/components/composite/CardGrid.tsx",
-        "skipBindingKeys": ["cardChildren"],
+        "skipBindingKeys": ["cardColumns"],
         "props": {
           "data": {
             "type": "array",
             "required": false,
             "description": "표시할 데이터 배열 (undefined일 경우 자동 스켈레톤 표시)"
           },
-          "cardChildren": {
+          "cardColumns": {
             "type": "array",
             "required": true,
-            "description": "카드 내용 정의 배열 (CardGridCellChild[])"
+            "description": "카드 내용 정의 배열 (CardGridColumn[] — 첫 항목의 cellChildren 을 카드 본문으로 사용)"
           },
           "columns": {
             "type": "number",
