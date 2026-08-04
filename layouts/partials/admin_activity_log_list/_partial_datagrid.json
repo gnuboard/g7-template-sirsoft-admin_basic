@@ -11,7 +11,8 @@
     "pagination": true,
     "serverSidePagination": true,
     "serverCurrentPage": "{{activityLogs?.data?.pagination?.current_page ?? 1}}",
-    "serverTotalPages": "{{activityLogs?.data?.pagination?.last_page ?? 1}}",
+    "serverTotalPages": "{{activityLogs?.data?.pagination?.last_page ?? null}}",
+    "serverHasMorePages": "{{activityLogs?.data?.pagination?.has_more_pages ?? false}}",
     "pageSize": "{{+(query.per_page || 20)}}",
     "alwaysShowPagination": true,
     "idField": "id",
@@ -290,7 +291,7 @@
             "props": {
               "className": "text-label-subtle"
             },
-            "text": "{{row.number}}"
+            "text": "{{row.number ?? '-'}}"
           }
         ]
       },

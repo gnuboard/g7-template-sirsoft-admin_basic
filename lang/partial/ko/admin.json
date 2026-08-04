@@ -1768,6 +1768,12 @@
       "dev_dashboard": "개발 대시보드",
       "sql_query_log": "SQL 쿼리 로그",
       "sql_query_log_desc": "실행된 SQL 쿼리를 로그에 기록합니다. 로그 파일 위치: /storage/logs/query.log",
+      "pagination": "목록 한계값",
+      "pagination_desc": "대용량 목록에서 총 건수를 세는 범위와 직접 요청 가능한 페이지 번호의 상한입니다. 상한을 넘으면 총 건수를 \"N건 이상\" 으로 표시하고 마지막 페이지 점프만 감춥니다 — 다음 페이지 이동은 그대로 열려 있습니다.",
+      "pagination_result_cap": "총 건수 집계 상한",
+      "pagination_result_cap_desc": "이 건수까지만 정확히 셉니다. 0 이면 항상 전부 셉니다(대용량에서 목록이 느려질 수 있습니다).",
+      "pagination_max_page": "페이지 번호 상한",
+      "pagination_max_page_desc": "주소로 직접 요청할 수 있는 최대 페이지 번호입니다. 0 이면 제한하지 않습니다. 정상적인 다음 페이지 이동은 이 값과 무관하게 계속 가능합니다.",
       "core_update": "업데이트 설정",
       "core_update_desc": "코어 및 확장(모듈/플러그인/템플릿) 업데이트에 사용할 GitHub 인증 정보를 설정합니다.",
       "core_update_github_url": "GitHub 저장소 URL",
@@ -2307,7 +2313,8 @@
       "no_value": "-"
     },
     "pagination": {
-      "total": "총 {{count}}건"
+      "total": "총 {{count}}건",
+      "total_at_least": "총 {{count}}건 이상"
     },
     "empty": {
       "title": "활동 로그가 없습니다",
