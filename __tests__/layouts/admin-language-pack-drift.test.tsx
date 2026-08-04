@@ -106,7 +106,7 @@ describe('admin language pack list — 드리프트(files_missing) 배선', () =
     expect(setsSelected.params.languagePackReinstallMode).toBe(false);
   });
 
-  it('설치 모달이 재설치 모드에 따라 auto_activate 를 보낸다', () => {
+  it('설치 모달이 재설치 모드와 활성화 권한을 함께 보고 auto_activate 를 보낸다', () => {
     const modal = JSON.parse(
       fs.readFileSync(
         path.resolve(__dirname, '../../layouts/partials/admin_language_pack_list/_modal_install_bundled.json'),
@@ -119,7 +119,22 @@ describe('admin language pack list — 드리프트(files_missing) 배선', () =
       (n) => n.handler === 'apiCall' && String(n.target).includes('install-from-bundled'),
     );
     expect(apiCall).not.toBeNull();
-    expect(apiCall.params.body.auto_activate).toBe('{{_global.languagePackReinstallMode === true}}');
+
+    const expression = apiCall.params.body.auto_activate;
+
+    // 재설치는 "복구" 이므로 활성 상태를 유지해야 한다 → 재설치 모드가 조건에 남아 있어야 한다.
+    expect(expression).toContain('_global.languagePackReinstallMode === true');
+
+    // 서버가 auto_activate=true 에 활성화 권한(core.language_packs.manage)을 요구하므로,
+    // 권한 없는 운영자에게 이 값을 실어 보내면 422 로 재설치 자체가 막힌다 —
+    // 화면에는 이 플래그를 끄는 수단이 없어 막다른 길이 된다.
+    // 권한이 없으면 보내지 않아야 재설치는 되고 팩만 installed 로 내려간다.
+    expect(expression).toContain("selectedBundledLanguagePack?.abilities?.can_activate === true");
+
+    // 두 조건은 AND 여야 한다 (하나라도 OR 이면 권한 없는 계정이 true 를 보낸다).
+    expect(expression).toBe(
+      '{{_global.languagePackReinstallMode === true && _global.selectedBundledLanguagePack?.abilities?.can_activate === true}}',
+    );
   });
 });
 
