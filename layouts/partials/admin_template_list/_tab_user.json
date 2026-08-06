@@ -105,7 +105,8 @@
             "alwaysShowPagination": true,
             "serverSidePagination": true,
             "serverCurrentPage": "{{templates?.data?.pagination?.current_page ?? 1}}",
-            "serverTotalPages": "{{templates?.data?.pagination?.last_page ?? 1}}",
+            "serverTotalPages": "{{templates?.data?.pagination?.last_page ?? null}}",
+            "serverHasMorePages": "{{templates?.data?.pagination?.has_more_pages ?? false}}",
             "cardClassName": "border border-gray-200 dark:border-gray-700 rounded-lg p-4 relative",
             "cardColumns": [
               {

@@ -671,7 +671,8 @@
             "alwaysShowPagination": true,
             "serverSidePagination": true,
             "serverCurrentPage": "{{language_packs?.data?.meta?.current_page ?? 1}}",
-            "serverTotalPages": "{{language_packs?.data?.meta?.last_page ?? 1}}",
+            "serverTotalPages": "{{language_packs?.data?.meta?.last_page ?? null}}",
+            "serverHasMorePages": "{{language_packs?.data?.meta?.has_more_pages ?? false}}",
             "cardClassName": "border border-gray-200 dark:border-gray-700 rounded-lg p-4 relative",
             "cardColumns": [
               {

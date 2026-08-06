@@ -236,7 +236,20 @@ export interface DataGridProps {
   // 서버 사이드 페이지네이션 (API에서 페이지네이션 처리 시)
   serverSidePagination?: boolean;
   serverCurrentPage?: number;
-  serverTotalPages?: number;
+  /**
+   * 서버가 알려준 마지막 페이지 번호
+   *
+   * 총 건수를 상한까지만 센 목록은 마지막 페이지를 계산할 수 없어 서버가 `null` 을 보낸다.
+   * 1 로 채우면 화면이 "1페이지뿐" 이라고 잘못 말하므로 null 을 그대로 흘려보낸다.
+   */
+  serverTotalPages?: number | null;
+  /**
+   * 다음 페이지 존재 여부 (총 건수를 모르는 목록에서 사용)
+   *
+   * 총 건수를 몰라도 서버는 이 값을 정확히 판정한다. 마지막 페이지를 계산할 수 없어도
+   * "다음" 이동은 이 값으로 끝까지 열어 둘 수 있다.
+   */
+  serverHasMorePages?: boolean;
   onPageChange?: (page: number) => void;
 
   // 다국어 지원 텍스트 (레이아웃 JSON에서 $t: 문법으로 전달)
@@ -651,6 +664,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
   serverSidePagination = false,
   serverCurrentPage,
   serverTotalPages,
+  serverHasMorePages,
   onPageChange,
   // 다국어 텍스트
   prevText,
@@ -926,7 +940,18 @@ export const DataGrid: React.FC<DataGridProps> = ({
 
   // 서버 사이드 페이지네이션인 경우 서버에서 전달된 값 사용
   const effectiveCurrentPage = serverSidePagination ? (serverCurrentPage || 1) : currentPage;
-  const effectiveTotalPages = serverSidePagination ? (serverTotalPages || 1) : Math.ceil((sortedData?.length || 0) / pageSize);
+  // 총 건수를 상한까지만 센 목록은 마지막 페이지가 null 로 온다. 1 로 채우면
+  // 페이저가 통째로 접혀 1페이지 밖 행에 도달할 방법이 사라지므로 null 을 보존한다.
+  const effectiveTotalPages: number | null = serverSidePagination
+    ? (serverTotalPages ?? null)
+    : Math.ceil((sortedData?.length || 0) / pageSize);
+
+  // 마지막 페이지를 모르더라도 "다음" 이 열려 있거나 이미 2페이지 이상이면 페이저는 필요하다.
+  const shouldShowPagination =
+    alwaysShowPagination ||
+    (effectiveTotalPages ?? 0) > 1 ||
+    serverHasMorePages === true ||
+    effectiveCurrentPage > 1;
 
   // 페이지 변경 핸들러
   const handlePageChange = useCallback((page: number) => {
@@ -1293,11 +1318,12 @@ export const DataGrid: React.FC<DataGridProps> = ({
         )}
 
         {/* 페이지네이션 */}
-        {pagination && (alwaysShowPagination || effectiveTotalPages > 1) && (
+        {pagination && shouldShowPagination && (
           <Div className="flex justify-center mt-4">
             <Pagination
               currentPage={effectiveCurrentPage}
               totalPages={effectiveTotalPages}
+              hasMorePages={serverSidePagination ? serverHasMorePages : undefined}
               onPageChange={handlePageChange}
               showFirstLast={showFirstLast}
               maxVisiblePages={5}
@@ -1613,11 +1639,12 @@ export const DataGrid: React.FC<DataGridProps> = ({
       </Div>
 
       {/* 페이지네이션 */}
-      {pagination && (alwaysShowPagination || effectiveTotalPages > 1) && (
+      {pagination && shouldShowPagination && (
         <Div className="flex justify-center mt-4">
           <Pagination
             currentPage={effectiveCurrentPage}
             totalPages={effectiveTotalPages}
+            hasMorePages={serverSidePagination ? serverHasMorePages : undefined}
             onPageChange={handlePageChange}
             showFirstLast={showFirstLast}
             maxVisiblePages={5}

@@ -1764,6 +1764,12 @@
       "dev_dashboard": "Dev Dashboard",
       "sql_query_log": "SQL Query Log",
       "sql_query_log_desc": "Log executed SQL queries. Log file location: /storage/logs/query.log",
+      "pagination": "List limits",
+      "pagination_desc": "How far totals are counted on large lists, and the highest page number that can be requested directly. Beyond the cap the total is shown as \"N+\" and only the last-page jump is hidden — moving to the next page stays available.",
+      "pagination_result_cap": "Total count cap",
+      "pagination_result_cap_desc": "Counts exactly up to this many rows. 0 always counts everything (lists may slow down on large data).",
+      "pagination_max_page": "Maximum page number",
+      "pagination_max_page_desc": "Highest page number that can be requested directly via URL. 0 means no limit. Normal next-page navigation is unaffected.",
       "core_update": "Update Settings",
       "core_update_desc": "Configure GitHub authentication for core and extension (module/plugin/template) updates.",
       "core_update_github_url": "GitHub Repository URL",
@@ -2303,7 +2309,8 @@
       "no_value": "-"
     },
     "pagination": {
-      "total": "Total {{count}} items"
+      "total": "Total {{count}} items",
+      "total_at_least": "Total {{count}}+ items"
     },
     "empty": {
       "title": "No activity logs found",

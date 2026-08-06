@@ -705,8 +705,9 @@
               "type": "composite",
               "name": "Pagination",
               "props": {
-                "currentPage": "{{notificationDefinitions?.data?.pagination?.current_page || 1}}",
-                "totalPages": "{{notificationDefinitions?.data?.pagination?.last_page || 1}}"
+                "currentPage": "{{notificationDefinitions?.data?.pagination?.current_page ?? 1}}",
+                "totalPages": "{{notificationDefinitions?.data?.pagination?.last_page ?? null}}",
+                "hasMorePages": "{{notificationDefinitions?.data?.pagination?.has_more_pages ?? false}}"
               },
               "actions": [
                 {

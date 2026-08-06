@@ -643,7 +643,8 @@
                                     "alwaysShowPagination": true,
                                     "serverSidePagination": true,
                                     "serverCurrentPage": "{{modules?.data?.pagination?.current_page ?? 1}}",
-                                    "serverTotalPages": "{{modules?.data?.pagination?.last_page ?? 1}}",
+                                    "serverTotalPages": "{{modules?.data?.pagination?.last_page ?? null}}",
+                                    "serverHasMorePages": "{{modules?.data?.pagination?.has_more_pages ?? false}}",
                                     "cardClassName": "border border-gray-200 dark:border-gray-700 rounded-lg p-4 relative",
                                     "cardColumns": [
                                         {
