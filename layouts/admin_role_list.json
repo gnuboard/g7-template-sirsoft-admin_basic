@@ -355,6 +355,35 @@
                                     ]
                                 },
                                 {
+                                    "field": "permissions_count",
+                                    "header": "$t:admin.roles.columns.permissions_count",
+                                    "sortable": false,
+                                    "cellChildren": [
+                                        {
+                                            "type": "basic",
+                                            "name": "Div",
+                                            "props": {
+                                                "className": "flex items-center gap-1 text-gray-600 dark:text-gray-400"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Icon",
+                                                    "props": {
+                                                        "name": "key",
+                                                        "size": "sm"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "text": "{{row.permissions_count ?? 0}}"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
                                     "field": "is_active",
                                     "header": "$t:admin.roles.columns.status",
                                     "sortable": false,

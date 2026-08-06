@@ -1054,6 +1054,7 @@
       "name": "역할명",
       "description": "설명",
       "users_count": "사용자 수",
+      "permissions_count": "권한 수",
       "status": "상태",
       "created_at": "생성일"
     },

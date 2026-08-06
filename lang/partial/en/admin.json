@@ -1050,6 +1050,7 @@
       "name": "Role Name",
       "description": "Description",
       "users_count": "Users",
+      "permissions_count": "Permissions",
       "status": "Status",
       "created_at": "Created At"
     },
