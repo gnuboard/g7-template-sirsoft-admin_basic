@@ -1,4 +1,5 @@
 {
+  "comment": "e2e:allow 체크박스 label prop 미렌더 정정(Label 래핑+Span) — 마크업 치환만, 동작 변화 없음. admin-settings-security-password-policy 레이아웃 테스트가 커버",
   "meta": {
     "is_partial": true,
     "description": "환경설정 보안 탭 콘텐츠"
@@ -450,12 +451,25 @@
                 },
                 {
                   "type": "basic",
-                  "name": "Checkbox",
+                  "name": "Label",
                   "props": {
-                    "name": "security.require_password_special_char",
-                    "disabled": "{{_computed.isReadOnly}}",
-                    "label": "$t:admin.settings.security.require_password_special_char_label"
-                  }
+                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Checkbox",
+                      "props": {
+                        "name": "security.require_password_special_char",
+                        "disabled": "{{_computed.isReadOnly}}"
+                      }
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "text": "$t:admin.settings.security.require_password_special_char_label"
+                    }
+                  ]
                 },
                 {
                   "type": "basic",
@@ -485,12 +499,25 @@
                 },
                 {
                   "type": "basic",
-                  "name": "Checkbox",
+                  "name": "Label",
                   "props": {
-                    "name": "security.two_factor_auth",
-                    "disabled": "{{_computed.isReadOnly}}",
-                    "label": "$t:admin.settings.security.two_factor_auth_label"
-                  }
+                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Checkbox",
+                      "props": {
+                        "name": "security.two_factor_auth",
+                        "disabled": "{{_computed.isReadOnly}}"
+                      }
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "text": "$t:admin.settings.security.two_factor_auth_label"
+                    }
+                  ]
                 },
                 {
                   "type": "basic",
