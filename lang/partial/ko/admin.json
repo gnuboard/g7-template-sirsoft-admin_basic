@@ -1054,6 +1054,7 @@
       "name": "역할명",
       "description": "설명",
       "users_count": "사용자 수",
+      "permissions_count": "권한 수",
       "status": "상태",
       "created_at": "생성일"
     },
@@ -2159,7 +2160,9 @@
         "saved_by": "저장자: {{name}}",
         "lines": "라인",
         "modified": "수정",
-        "chars": "자"
+        "chars": "자",
+        "load_more": "이전 버전 더 보기",
+        "limit_reached": "표시할 수 있는 최대 개수에 도달했습니다."
       },
       "extension_version_history": {
         "title": "확장 버전 히스토리",

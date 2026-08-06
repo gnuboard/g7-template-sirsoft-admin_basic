@@ -1050,6 +1050,7 @@
       "name": "Role Name",
       "description": "Description",
       "users_count": "Users",
+      "permissions_count": "Permissions",
       "status": "Status",
       "created_at": "Created At"
     },
@@ -2155,7 +2156,9 @@
         "saved_by": "Saved by: {{name}}",
         "lines": "lines",
         "modified": "modified",
-        "chars": "chars"
+        "chars": "chars",
+        "load_more": "Load older versions",
+        "limit_reached": "Reached the maximum number of versions that can be listed."
       },
       "extension_version_history": {
         "title": "Extension Version History",
