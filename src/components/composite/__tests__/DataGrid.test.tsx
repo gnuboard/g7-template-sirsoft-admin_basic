@@ -1219,6 +1219,8 @@ describe('DataGrid', () => {
    * `renderCellChildren` 으로 넘기고 `cell.text` 는 원문 그대로 출력해 왔다.
    * 그 결과 `{{order.data?.total_quantity ?? 0}}개` 같은 값이 화면에 **원본 문자열로 노출**된다.
    * (브라우저 실측: `/admin/ecommerce/orders/:orderNumber` 합계 행 3셀)
+   *
+   * @effects datagrid_footer_cell_text_binding_resolved
    */
   describe('푸터 행 text 바인딩 해석', () => {
     const footerColumns: DataGridColumn[] = [
