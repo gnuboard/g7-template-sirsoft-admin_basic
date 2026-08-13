@@ -1637,6 +1637,12 @@
         "s3_url": "S3 URL (Public URL)",
         "s3_url_desc": "CDN or custom domain used to build public file URLs. Enter the API address in the Endpoint URL field instead."
       },
+      "public_asset": {
+        "title": "Public Asset Storage",
+        "desc": "Configure the disk for serving fully public assets (product, category, review, and editor images, etc.) via direct URLs. When disabled, the existing streaming method is used.",
+        "disk": "Disk",
+        "s3_help": "When selecting S3, the S3 URL (CDN domain) in the File Storage card above must be configured. Without it, streaming is used."
+      },
       "cache": {
         "title": "Cache",
         "desc": "Configure application cache driver settings.",
