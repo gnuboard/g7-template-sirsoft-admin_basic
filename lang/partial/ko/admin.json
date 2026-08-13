@@ -1631,17 +1631,15 @@
         },
         "s3_bucket": "S3 버킷",
         "s3_region": "S3 리전",
-        "regions": {
-          "ap_northeast_2": "아시아 태평양 (서울)",
-          "ap_northeast_1": "아시아 태평양 (도쿄)",
-          "us_east_1": "미국 동부 (버지니아)",
-          "us_west_2": "미국 서부 (오레곤)",
-          "eu_west_1": "유럽 (아일랜드)"
-        },
+        "s3_region_desc": "AWS 리전 코드 또는 S3 호환 스토리지의 리전 값을 입력하세요. (예: ap-northeast-2, Cloudflare R2 는 auto)",
         "s3_access_key": "Access Key",
         "s3_secret_key": "Secret Key",
-        "s3_url": "S3 URL",
-        "s3_url_desc": "커스텀 엔드포인트 또는 CDN URL을 사용하는 경우에만 입력하세요."
+        "s3_endpoint": "엔드포인트 URL",
+        "s3_endpoint_desc": "S3 호환 스토리지(Cloudflare R2, MinIO 등)의 API 주소입니다. AWS S3 는 비워 둡니다.",
+        "s3_use_path_style": "Path-style 주소 사용",
+        "s3_use_path_style_desc": "MinIO 등 path-style 주소 전용 스토리지에서 켭니다.",
+        "s3_url": "S3 URL (공개 URL)",
+        "s3_url_desc": "파일 공개 URL 생성에 쓰는 CDN/커스텀 도메인입니다. API 요청 주소는 엔드포인트 URL에 입력하세요."
       },
       "cache": {
         "title": "캐시",

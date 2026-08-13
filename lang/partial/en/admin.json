@@ -1627,17 +1627,15 @@
         },
         "s3_bucket": "S3 Bucket",
         "s3_region": "S3 Region",
-        "regions": {
-          "ap_northeast_2": "Asia Pacific (Seoul)",
-          "ap_northeast_1": "Asia Pacific (Tokyo)",
-          "us_east_1": "US East (N. Virginia)",
-          "us_west_2": "US West (Oregon)",
-          "eu_west_1": "Europe (Ireland)"
-        },
+        "s3_region_desc": "Enter an AWS region code or the region value of your S3-compatible storage. (e.g. ap-northeast-2, or auto for Cloudflare R2)",
         "s3_access_key": "Access Key",
         "s3_secret_key": "Secret Key",
-        "s3_url": "S3 URL",
-        "s3_url_desc": "Only enter if using a custom endpoint or CDN URL."
+        "s3_endpoint": "Endpoint URL",
+        "s3_endpoint_desc": "API endpoint of S3-compatible storage (Cloudflare R2, MinIO, etc.). Leave empty for AWS S3.",
+        "s3_use_path_style": "Use path-style addressing",
+        "s3_use_path_style_desc": "Enable for storages that only support path-style addressing, such as MinIO.",
+        "s3_url": "S3 URL (Public URL)",
+        "s3_url_desc": "CDN or custom domain used to build public file URLs. Enter the API address in the Endpoint URL field instead."
       },
       "cache": {
         "title": "Cache",
