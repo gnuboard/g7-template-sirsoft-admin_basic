@@ -558,6 +558,98 @@
       ]
     },
     {
+      "id": "card_public_asset_settings",
+      "type": "basic",
+      "name": "Div",
+      "props": {
+        "className": "admin-card"
+      },
+      "children": [
+        {
+          "type": "basic",
+          "name": "H3",
+          "props": {
+            "className": "card-title"
+          },
+          "text": "$t:admin.settings.drivers.public_asset.title"
+        },
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": {
+            "className": "card-description"
+          },
+          "text": "$t:admin.settings.drivers.public_asset.desc"
+        },
+        {
+          "type": "basic",
+          "name": "Div",
+          "props": {
+            "className": "row-stack"
+          },
+          "children": [
+            {
+              "id": "field_public_asset_disk",
+              "type": "basic",
+              "name": "Div",
+              "props": {
+                "className": ""
+              },
+              "children": [
+                {
+                  "type": "basic",
+                  "name": "Label",
+                  "props": {
+                    "className": "form-label"
+                  },
+                  "text": "$t:admin.settings.drivers.public_asset.disk"
+                },
+                {
+                  "type": "basic",
+                  "name": "Div",
+                  "props": {
+                    "className": "w-full md:w-64"
+                  },
+                  "children": [
+                    {
+                      "type": "composite",
+                      "name": "Select",
+                      "props": {
+                        "name": "drivers.public_asset_disk",
+                        "disabled": "{{_computed.isReadOnly}}",
+                        "className": "w-full",
+                        "error": "{{_local.errors?.['drivers.public_asset_disk']?.[0] ?? ''}}",
+                        "options": "{{(_local.form?.available_drivers?.public_asset ?? []).map(d => ({value: d.id, label: $localized(d.label)}))}}"
+                      }
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "if": "{{_local.errors?.['drivers.public_asset_disk']}}",
+                      "props": {
+                        "className": "form-error"
+                      },
+                      "text": "{{_local.errors?.['drivers.public_asset_disk']?.[0] ?? ''}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "public_asset_s3_help",
+              "type": "basic",
+              "name": "Div",
+              "if": "{{_local.form?.drivers?.public_asset_disk === 's3'}}",
+              "props": {
+                "className": "text-sm text-gray-500 dark:text-gray-400 mt-2"
+              },
+              "text": "$t:admin.settings.drivers.public_asset.s3_help"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "card_cache_settings",
       "type": "basic",
       "name": "Div",
