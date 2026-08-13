@@ -149,53 +149,31 @@
                     },
                     {
                       "type": "basic",
-                      "name": "Div",
+                      "name": "Input",
                       "props": {
-                        "className": "w-full md:w-64"
+                        "type": "text",
+                        "name": "drivers.s3_region",
+                        "placeholder": "ap-northeast-2",
+                        "disabled": "{{_computed.isReadOnly}}",
+                        "className": "{{_local.errors?.['drivers.s3_region'] ? 'input-error md:w-64 font-mono' : 'md:w-64 font-mono'}}"
+                      }
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "if": "{{_local.errors?.['drivers.s3_region']}}",
+                      "props": {
+                        "className": "form-error"
                       },
-                      "children": [
-                        {
-                          "type": "composite",
-                          "name": "Select",
-                          "props": {
-                            "name": "drivers.s3_region",
-                            "disabled": "{{_computed.isReadOnly}}",
-                            "className": "w-full",
-                            "error": "{{_local.errors?.['drivers.s3_region']?.[0] ?? ''}}",
-                            "options": [
-                              {
-                                "value": "ap-northeast-2",
-                                "label": "$t:admin.settings.drivers.storage.regions.ap_northeast_2"
-                              },
-                              {
-                                "value": "ap-northeast-1",
-                                "label": "$t:admin.settings.drivers.storage.regions.ap_northeast_1"
-                              },
-                              {
-                                "value": "us-east-1",
-                                "label": "$t:admin.settings.drivers.storage.regions.us_east_1"
-                              },
-                              {
-                                "value": "us-west-2",
-                                "label": "$t:admin.settings.drivers.storage.regions.us_west_2"
-                              },
-                              {
-                                "value": "eu-west-1",
-                                "label": "$t:admin.settings.drivers.storage.regions.eu_west_1"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "type": "basic",
-                          "name": "Span",
-                          "if": "{{_local.errors?.['drivers.s3_region']}}",
-                          "props": {
-                            "className": "form-error"
-                          },
-                          "text": "{{_local.errors?.['drivers.s3_region']?.[0] ?? ''}}"
-                        }
-                      ]
+                      "text": "{{_local.errors?.['drivers.s3_region']?.[0] ?? ''}}"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "P",
+                      "props": {
+                        "className": "text-hint mt-1"
+                      },
+                      "text": "$t:admin.settings.drivers.storage.s3_region_desc"
                     }
                   ]
                 },
@@ -270,6 +248,102 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.s3_secret_key']?.[0] ?? ''}}"
+                    }
+                  ]
+                },
+                {
+                  "id": "s3_endpoint_field",
+                  "type": "basic",
+                  "name": "Div",
+                  "props": {
+                    "className": "py-3"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Label",
+                      "props": {
+                        "className": "form-label"
+                      },
+                      "text": "$t:admin.settings.drivers.storage.s3_endpoint"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Input",
+                      "props": {
+                        "type": "text",
+                        "name": "drivers.s3_endpoint",
+                        "placeholder": "https://<account-id>.r2.cloudflarestorage.com",
+                        "disabled": "{{_computed.isReadOnly}}",
+                        "className": "{{_local.errors?.['drivers.s3_endpoint'] ? 'input-error' : ''}}"
+                      }
+                    },
+                    {
+                      "type": "basic",
+                      "name": "Span",
+                      "if": "{{_local.errors?.['drivers.s3_endpoint']}}",
+                      "props": {
+                        "className": "form-error"
+                      },
+                      "text": "{{_local.errors?.['drivers.s3_endpoint']?.[0] ?? ''}}"
+                    },
+                    {
+                      "type": "basic",
+                      "name": "P",
+                      "props": {
+                        "className": "text-hint mt-1"
+                      },
+                      "text": "$t:admin.settings.drivers.storage.s3_endpoint_desc"
+                    }
+                  ]
+                },
+                {
+                  "id": "s3_use_path_style_field",
+                  "type": "basic",
+                  "name": "Div",
+                  "props": {
+                    "className": "py-3"
+                  },
+                  "children": [
+                    {
+                      "type": "basic",
+                      "name": "Div",
+                      "props": {
+                        "className": "flex-between"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Div",
+                          "children": [
+                            {
+                              "type": "basic",
+                              "name": "Span",
+                              "props": {
+                                "className": "text-heading"
+                              },
+                              "text": "$t:admin.settings.drivers.storage.s3_use_path_style"
+                            },
+                            {
+                              "type": "basic",
+                              "name": "P",
+                              "props": {
+                                "className": "text-label-subtle"
+                              },
+                              "text": "$t:admin.settings.drivers.storage.s3_use_path_style_desc"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "composite",
+                          "name": "Toggle",
+                          "props": {
+                            "name": "drivers.s3_use_path_style",
+                            "size": "md",
+                            "disabled": "{{_computed.isReadOnly}}"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
@@ -382,6 +456,7 @@
                               "handler": "apiCall",
                               "target": "/api/admin/settings/test-driver",
                               "auth_required": true,
+                              "comment": "s3_url 은 공개 URL(CDN) base 라 연결 테스트와 무관 — 의도적 미전송",
                               "params": {
                                 "method": "POST",
                                 "body": {
@@ -389,7 +464,9 @@
                                   "s3_bucket": "{{_local.form.drivers?.s3_bucket}}",
                                   "s3_region": "{{_local.form.drivers?.s3_region}}",
                                   "s3_access_key": "{{_local.form.drivers?.s3_access_key}}",
-                                  "s3_secret_key": "{{_local.form.drivers?.s3_secret_key}}"
+                                  "s3_secret_key": "{{_local.form.drivers?.s3_secret_key}}",
+                                  "s3_endpoint": "{{_local.form.drivers?.s3_endpoint}}",
+                                  "s3_use_path_style": "{{!!_local.form.drivers?.s3_use_path_style}}"
                                 }
                               },
                               "onSuccess": [
@@ -422,7 +499,7 @@
                                     "target": "local",
                                     "driverTestResults.s3": {
                                       "success": false,
-                                      "message": "Connection test failed"
+                                      "message": "$t:admin.settings.drivers.test_failed"
                                     }
                                   }
                                 },
@@ -841,7 +918,7 @@
                                     "target": "local",
                                     "driverTestResults.redis": {
                                       "success": false,
-                                      "message": "Connection test failed"
+                                      "message": "$t:admin.settings.drivers.test_failed"
                                     }
                                   }
                                 },
@@ -1091,7 +1168,7 @@
                                     "target": "local",
                                     "driverTestResults.memcached": {
                                       "success": false,
-                                      "message": "Connection test failed"
+                                      "message": "$t:admin.settings.drivers.test_failed"
                                     }
                                   }
                                 },
@@ -2545,7 +2622,10 @@
                                   "websocket_enabled": true,
                                   "websocket_host": "{{_local.form.drivers?.websocket_host}}",
                                   "websocket_port": "{{_local.form.drivers?.websocket_port}}",
-                                  "websocket_scheme": "{{_local.form.drivers?.websocket_scheme}}"
+                                  "websocket_scheme": "{{_local.form.drivers?.websocket_scheme}}",
+                                  "websocket_server_host": "{{_local.form.drivers?.websocket_server_host}}",
+                                  "websocket_server_port": "{{_local.form.drivers?.websocket_server_port}}",
+                                  "websocket_server_scheme": "{{_local.form.drivers?.websocket_server_scheme}}"
                                 }
                               },
                               "onSuccess": [
@@ -2578,7 +2658,7 @@
                                     "target": "local",
                                     "driverTestResults.websocket": {
                                       "success": false,
-                                      "message": "Connection test failed"
+                                      "message": "$t:admin.settings.drivers.test_failed"
                                     }
                                   }
                                 },
