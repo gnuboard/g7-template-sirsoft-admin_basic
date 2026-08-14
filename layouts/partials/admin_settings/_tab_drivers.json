@@ -81,6 +81,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.storage_driver']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_storage",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.storage_driver && !(_local.form?.available_drivers?.storage ?? []).some(d => d.id === _local.form?.drivers?.storage_driver)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-storage"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.storage_driver ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -407,7 +437,7 @@
                       "props": {
                         "type": "button",
                         "disabled": "{{_computed.isReadOnly || (_local.testingDriver === 's3')}}",
-                        "className": "px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
+                        "className": "px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-400 dark:disabled:bg-blue-800 text-white dark:text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
                       },
                       "children": [
                         {
@@ -631,6 +661,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.public_asset_disk']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_public_asset",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.public_asset_disk && !(_local.form?.available_drivers?.public_asset ?? []).some(d => d.id === _local.form?.drivers?.public_asset_disk)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-public_asset"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.public_asset_disk ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -723,6 +783,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.cache_driver']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_cache",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.cache_driver && !(_local.form?.available_drivers?.cache ?? []).some(d => d.id === _local.form?.drivers?.cache_driver)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-cache"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.cache_driver ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -921,7 +1011,7 @@
                       "props": {
                         "type": "button",
                         "disabled": "{{_computed.isReadOnly || (_local.testingDriver === 'redis')}}",
-                        "className": "px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
+                        "className": "px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-400 dark:disabled:bg-blue-800 text-white dark:text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
                       },
                       "children": [
                         {
@@ -1173,7 +1263,7 @@
                       "props": {
                         "type": "button",
                         "disabled": "{{_computed.isReadOnly || (_local.testingDriver === 'memcached')}}",
-                        "className": "px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
+                        "className": "px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-400 dark:disabled:bg-blue-800 text-white dark:text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
                       },
                       "children": [
                         {
@@ -1381,12 +1471,7 @@
                         "disabled": "{{_computed.isReadOnly}}",
                         "className": "w-full",
                         "error": "{{_local.errors?.['drivers.search_engine_driver']?.[0] ?? ''}}",
-                        "options": [
-                          {
-                            "value": "mysql-fulltext",
-                            "label": "$t:admin.settings.drivers.search_engine.options.mysql_fulltext"
-                          }
-                        ]
+                        "options": "{{(_local.form?.available_drivers?.search ?? []).map(d => ({value: d.id, label: $localized(d.label)}))}}"
                       }
                     },
                     {
@@ -1397,6 +1482,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.search_engine_driver']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_search",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.search_engine_driver && !(_local.form?.available_drivers?.search ?? []).some(d => d.id === _local.form?.drivers?.search_engine_driver)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-search"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.search_engine_driver ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1512,6 +1627,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.session_driver']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_session",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.session_driver && !(_local.form?.available_drivers?.session ?? []).some(d => d.id === _local.form?.drivers?.session_driver)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-session"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.session_driver ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1671,6 +1816,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.queue_driver']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_queue",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.queue_driver && !(_local.form?.available_drivers?.queue ?? []).some(d => d.id === _local.form?.drivers?.queue_driver)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-queue"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.queue_driver ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1825,6 +2000,36 @@
                         "className": "form-error"
                       },
                       "text": "{{_local.errors?.['drivers.log_driver']?.[0] ?? ''}}"
+                    },
+                    {
+                      "id": "unavailable_driver_notice_log",
+                      "type": "basic",
+                      "name": "P",
+                      "if": "{{!!_local.form?.drivers?.log_driver && !(_local.form?.available_drivers?.log ?? []).some(d => d.id === _local.form?.drivers?.log_driver)}}",
+                      "props": {
+                        "className": "text-warning-soft mt-2",
+                        "data-testid": "driver-unavailable-log"
+                      },
+                      "children": [
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_prefix"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "props": {
+                            "className": "font-mono"
+                          },
+                          "text": "{{_local.form?.drivers?.log_driver ?? ''}}"
+                        },
+                        {
+                          "type": "basic",
+                          "name": "Span",
+                          "text": "$t:admin.settings.drivers.common.unavailable_saved_value_suffix"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -2659,7 +2864,7 @@
                       "props": {
                         "type": "button",
                         "disabled": "{{_computed.isReadOnly || (_local.testingDriver === 'websocket')}}",
-                        "className": "px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
+                        "className": "px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-blue-400 dark:disabled:bg-blue-800 text-white dark:text-white text-sm font-medium rounded-lg flex-center gap-2 transition-colors"
                       },
                       "children": [
                         {

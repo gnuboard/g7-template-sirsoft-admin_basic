@@ -1628,7 +1628,9 @@
     },
     "drivers": {
       "common": {
-        "optional": "선택사항"
+        "optional": "선택사항",
+        "unavailable_saved_value_prefix": "저장된 값 ",
+        "unavailable_saved_value_suffix": " 은(는) 현재 사용할 수 없습니다. 사용 가능한 값을 선택해 저장하세요."
       },
       "storage": {
         "title": "파일 스토리지",
@@ -1747,9 +1749,6 @@
         "desc": "통합검색 및 관리자 검색에 사용할 검색엔진 드라이버를 설정합니다.",
         "driver": "검색엔진 드라이버",
         "driver_desc": "기본 제공되는 MySQL FULLTEXT(ngram) 엔진은 별도 설정 없이 한국어 검색을 지원합니다.",
-        "options": {
-          "mysql_fulltext": "MySQL FULLTEXT (ngram)"
-        },
         "plugin_notice": "검색엔진 플러그인(Meilisearch, Elasticsearch 등)을 설치하면 추가 드라이버가 표시됩니다."
       },
       "test_connection": "연결 테스트",

@@ -1624,7 +1624,9 @@
     },
     "drivers": {
       "common": {
-        "optional": "Optional"
+        "optional": "Optional",
+        "unavailable_saved_value_prefix": "The saved value ",
+        "unavailable_saved_value_suffix": " is no longer available. Choose an available option and save."
       },
       "storage": {
         "title": "File Storage",
@@ -1743,9 +1745,6 @@
         "desc": "Configure the search engine driver for integrated and admin search.",
         "driver": "Search Engine Driver",
         "driver_desc": "The built-in MySQL FULLTEXT (ngram) engine supports Korean search without additional configuration.",
-        "options": {
-          "mysql_fulltext": "MySQL FULLTEXT (ngram)"
-        },
         "plugin_notice": "Additional drivers will appear when search engine plugins (Meilisearch, Elasticsearch, etc.) are installed."
       },
       "test_connection": "Test Connection",
