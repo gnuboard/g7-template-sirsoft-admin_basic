@@ -90,7 +90,8 @@
               "id": "s3_settings",
               "type": "basic",
               "name": "Div",
-              "if": "{{_local.form?.drivers?.storage_driver === 's3'}}",
+              "comment": "공개 자산 스토리지만 s3 인 구성(파일 스토리지는 로컬)에서도 접속 정보를 입력해야 하므로 두 축 중 하나라도 s3 면 노출한다",
+              "if": "{{_local.form?.drivers?.storage_driver === 's3' || _local.form?.drivers?.public_asset_disk === 's3'}}",
               "props": {
                 "className": "ml-4 pl-4 border-l-2 border-blue-200 dark:border-blue-800 space-y-4"
               },

@@ -163,4 +163,69 @@ test.describe('공개 자산 스토리지 설정', () => {
 
     await page.keyboard.press('Escape');
   });
+
+  // @scenario consumer=product, disk_setting=fake_cdn, e2e=drivers_tab_card, hook=unregistered, override=follow_core, row_state=new_remote_row
+  // @effects cross_origin_asset_request_omits_session_token
+  test('교차 출처 공개 자산 요청에는 세션 토큰을 보내지 않는다', async ({ page }) => {
+    await authenticatePage(page, settingsToken);
+    await gotoDriversTab(page);
+
+    // 외부 CDN origin 을 가로채 요청 헤더를 실측한다 (CORS 헤더는 주지 않는다 —
+    // 기본 설정 S3 버킷과 동일한 조건)
+    const crossOriginUrl = 'https://cdn.example.invalid/bucket/products/probe.png';
+    const capturedHeaders: Record<string, string>[] = [];
+    await page.route(crossOriginUrl, async (route) => {
+      capturedHeaders.push(route.request().headers());
+      await route.fulfill({ status: 200, contentType: 'image/png', body: Buffer.from([]) });
+    });
+
+    const sameOriginHeaders: Record<string, string>[] = [];
+    await page.route('**/api/admin/settings?probe=1', async (route) => {
+      sameOriginHeaders.push(route.request().headers());
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
+    });
+
+    await page.evaluate(async (url) => {
+      const api = (window as any).G7Core?.api;
+      await api.get(url, { responseType: 'blob' }).catch(() => undefined);
+      await api.get('/api/admin/settings?probe=1').catch(() => undefined);
+    }, crossOriginUrl);
+
+    await expect.poll(() => capturedHeaders.length, { timeout: 20_000 }).toBeGreaterThan(0);
+    await expect.poll(() => sameOriginHeaders.length, { timeout: 20_000 }).toBeGreaterThan(0);
+
+    // 동일 출처는 종전대로 토큰을 실어야 한다 (대조군 — 판정식이 살아 있음을 보장)
+    expect(sameOriginHeaders[0]['authorization']).toContain('Bearer');
+    // 교차 출처는 토큰이 없어야 한다 (제3자 origin 노출 + CORS preflight 유발 차단)
+    expect(capturedHeaders[0]['authorization']).toBeUndefined();
+  });
+
+  // @scenario consumer=product, disk_setting=s3_without_url, e2e=drivers_tab_card, hook=unregistered, override=follow_core, row_state=new_remote_row
+  // @effects s3_credentials_visible_when_public_asset_disk_is_s3
+  test('파일 스토리지가 로컬이어도 공개 자산이 S3 면 접속 필드가 노출된다', async ({ page }) => {
+    await authenticatePage(page, settingsToken);
+    await gotoDriversTab(page);
+
+    const storageSelect = '[name="drivers.storage_driver"]';
+
+    // 파일 스토리지를 로컬로 두고(저장하지 않는다 — 폼 상태만 변경)
+    await openAndReadOptions(page, storageSelect);
+    await page.locator('[role="listbox"] [role="option"]', { hasText: '로컬' }).first().click();
+
+    // 이 상태에서 s3 접속 필드는 없어야 한다 (존재 확정 전 부재 단언 회피 —
+    // 아래에서 같은 선택자로 존재를 확정한다)
+    const bucketInput = page.locator('input[name="drivers.s3_bucket"]');
+    await expect(bucketInput).toHaveCount(0);
+
+    // 공개 자산 디스크만 S3 로 바꾸면 접속 필드가 나타나야 한다
+    await openAndReadOptions(page, CORE_SELECT_ROOT);
+    await page.locator('[role="listbox"] [role="option"]', { hasText: 'Amazon S3' }).first().click();
+
+    await expect(bucketInput).toBeVisible({ timeout: 20_000 });
+    await expect(page.locator('input[name="drivers.s3_url"]')).toBeVisible();
+    await expect(page.locator('input[name="drivers.s3_endpoint"]')).toBeVisible();
+
+    // 저장하지 않고 이탈 — 사이트 설정을 바꾸지 않는다
+    await gotoDriversTab(page);
+  });
 });
