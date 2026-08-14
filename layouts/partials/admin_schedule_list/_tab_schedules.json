@@ -1647,6 +1647,7 @@
         "alwaysShowPagination": true,
         "idField": "id",
         "selectable": true,
+        "selectionScope": "page",
         "showColumnSelector": true,
         "responsiveBreakpoint": 768,
         "rowActions": [

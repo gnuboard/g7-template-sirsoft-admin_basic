@@ -209,7 +209,16 @@
       "bulk_block_success": "사용자가 차단되었습니다.",
       "bulk_withdraw_title": "사용자 탈퇴 처리",
       "bulk_withdraw_confirm": "{{count}}명의 사용자를 탈퇴 처리합니다. 이 작업은 되돌리기 어려울 수 있습니다.",
-      "bulk_withdraw_success": "사용자가 탈퇴 처리되었습니다."
+      "bulk_withdraw_success": "사용자가 탈퇴 처리되었습니다.",
+      "bulk_withdraw_partial": "{updated}명을 탈퇴 처리했습니다. {failed}명은 처리하지 못했습니다 — {reason}",
+      "bulk_withdraw_all_failed": "탈퇴 처리하지 못했습니다 — {reason}",
+      "withdraw_confirm_title": "탈퇴 처리 확인",
+      "withdraw_confirm_lead": "상태를 '탈퇴'로 저장하면 이 회원은 실제로 탈퇴 처리됩니다. 되돌릴 수 없습니다.",
+      "withdraw_confirm_effects_title": "함께 처리되는 항목",
+      "withdraw_confirm_effect_anonymize": "이메일·이름·닉네임이 익명화됩니다.",
+      "withdraw_confirm_effect_sessions": "이 회원의 모든 로그인 세션이 해제됩니다.",
+      "withdraw_confirm_effect_linked": "약관 동의 이력·프로필 이미지가 삭제되고, 마일리지·본인인증 기록 등 연계 데이터가 정리됩니다.",
+      "withdraw_confirm_submit": "탈퇴 처리"
     },
     "form": {
       "page_title_create": "사용자 등록",
