@@ -1392,7 +1392,13 @@
       "image_max_width": "최대 너비",
       "image_max_height": "최대 높이",
       "image_quality": "이미지 품질",
-      "image_quality_hint": "1~100 사이의 값을 입력하세요. 높을수록 품질이 좋습니다."
+      "image_quality_hint": "1~100 사이의 값을 입력하세요. 높을수록 품질이 좋습니다.",
+      "orphan_cleanup": "고아 첨부 정리",
+      "orphan_cleanup_desc": "폼을 저장하지 않고 나가서 소유자 없이 남은 첨부파일을 정리합니다.",
+      "orphan_cleanup_enabled": "고아 첨부 자동 정리",
+      "orphan_cleanup_enabled_hint": "기본 꺼짐 — 운영자가 직접 켜야 동작합니다. 켜면 보존기간이 지난 고아 첨부의 파일과 기록을 매일 삭제합니다. 사이트 로고처럼 현재 사용 중인 첨부는 삭제하지 않습니다.",
+      "orphan_retention_days": "고아 첨부 보존기간 (일)",
+      "orphan_retention_days_hint": "업로드 후 이 기간이 지난 고아 첨부만 정리 대상이 됩니다. 폼 작성 중 이탈을 감안해 넉넉히 잡으세요. (1 ~ 3650 일)"
     },
     "seo": {
       "meta_settings": "메타 태그 설정",
