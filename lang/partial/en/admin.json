@@ -1388,7 +1388,13 @@
       "image_max_width": "Max Width",
       "image_max_height": "Max Height",
       "image_quality": "Image Quality",
-      "image_quality_hint": "Enter a value between 1-100. Higher values mean better quality."
+      "image_quality_hint": "Enter a value between 1-100. Higher values mean better quality.",
+      "orphan_cleanup": "Orphan Attachment Cleanup",
+      "orphan_cleanup_desc": "Clean up attachments left without an owner because a form was abandoned before saving.",
+      "orphan_cleanup_enabled": "Auto cleanup orphan attachments",
+      "orphan_cleanup_enabled_hint": "Off by default — the operator must turn it on. When on, files and records of orphan attachments past the retention period are deleted daily. Attachments currently in use, such as the site logo, are never deleted.",
+      "orphan_retention_days": "Orphan attachment retention (days)",
+      "orphan_retention_days_hint": "Only orphan attachments older than this period are eligible for cleanup. Allow generous headroom for forms left open. (1 ~ 3650 days)"
     },
     "seo": {
       "meta_settings": "Meta Tag Settings",
