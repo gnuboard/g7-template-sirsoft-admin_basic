@@ -530,7 +530,7 @@
                                     "target": "local",
                                     "driverTestResults.s3": {
                                       "success": false,
-                                      "message": "$t:admin.settings.drivers.test_failed"
+                                      "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                     }
                                   }
                                 },
@@ -538,7 +538,7 @@
                                   "handler": "toast",
                                   "params": {
                                     "type": "error",
-                                    "message": "$t:admin.settings.drivers.test_failed"
+                                    "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                   }
                                 },
                                 {
@@ -1101,7 +1101,7 @@
                                     "target": "local",
                                     "driverTestResults.redis": {
                                       "success": false,
-                                      "message": "$t:admin.settings.drivers.test_failed"
+                                      "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                     }
                                   }
                                 },
@@ -1109,7 +1109,7 @@
                                   "handler": "toast",
                                   "params": {
                                     "type": "error",
-                                    "message": "$t:admin.settings.drivers.test_failed"
+                                    "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                   }
                                 },
                                 {
@@ -1351,7 +1351,7 @@
                                     "target": "local",
                                     "driverTestResults.memcached": {
                                       "success": false,
-                                      "message": "$t:admin.settings.drivers.test_failed"
+                                      "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                     }
                                   }
                                 },
@@ -1359,7 +1359,7 @@
                                   "handler": "toast",
                                   "params": {
                                     "type": "error",
-                                    "message": "$t:admin.settings.drivers.test_failed"
+                                    "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                   }
                                 },
                                 {
@@ -2956,7 +2956,7 @@
                                     "target": "local",
                                     "driverTestResults.websocket": {
                                       "success": false,
-                                      "message": "$t:admin.settings.drivers.test_failed"
+                                      "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                     }
                                   }
                                 },
@@ -2964,7 +2964,7 @@
                                   "handler": "toast",
                                   "params": {
                                     "type": "error",
-                                    "message": "$t:admin.settings.drivers.test_failed"
+                                    "message": "{{error.message ?? '$t:admin.settings.drivers.test_failed'}}"
                                   }
                                 },
                                 {

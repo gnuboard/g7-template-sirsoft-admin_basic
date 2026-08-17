@@ -1611,7 +1611,7 @@
                                                                     "handler": "toast",
                                                                     "params": {
                                                                         "type": "error",
-                                                                        "message": "$t:admin.users.form.validation_error"
+                                                                        "message": "{{error.message ?? '$t:admin.users.form.validation_error'}}"
                                                                     }
                                                                 }
                                                             ]
@@ -1922,7 +1922,7 @@
                                                         "handler": "toast",
                                                         "params": {
                                                             "type": "error",
-                                                            "message": "$t:admin.users.form.validation_error"
+                                                            "message": "{{error.message ?? '$t:admin.users.form.validation_error'}}"
                                                         }
                                                     }
                                                 ]

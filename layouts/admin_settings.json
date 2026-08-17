@@ -769,7 +769,7 @@
                               "handler": "toast",
                               "params": {
                                 "type": "error",
-                                "message": "$t:admin.settings.save_error"
+                                "message": "{{error.message ?? '$t:admin.settings.save_error'}}"
                               }
                             }
                           ]
