@@ -80,7 +80,7 @@
                     "handler": "toast",
                     "params": {
                         "type": "error",
-                        "message": "{{error.message}}"
+                        "message": "{{error.message ?? '$t:common.error_occurred'}}"
                     }
                 }
             },
@@ -851,14 +851,25 @@
                                                         "text": "$t:admin.users.form.fields.status"
                                                     },
                                                     {
+                                                        "comment": "커스텀 Select 는 value-제어 전용 — defaultValue 는 렌더되지 않아 create 모드 표시가 비었다. 미전송 시 서버(CreateUserRequest)가 active 로 보정하므로 표시 기본값과 서버 기본값이 일치한다.",
                                                         "type": "composite",
                                                         "name": "Select",
                                                         "props": {
                                                             "name": "status",
                                                             "className": "w-full",
-                                                            "defaultValue": "active",
+                                                            "value": "{{_local.form?.status ?? 'active'}}",
                                                             "options": "{{route?.id ? [{label: '$t:admin.users.form.status_options.active', value: 'active'}, {label: '$t:admin.users.form.status_options.inactive', value: 'inactive'}, {label: '$t:admin.users.form.status_options.blocked', value: 'blocked'}, {label: '$t:admin.users.form.status_options.withdrawn', value: 'withdrawn'}] : [{label: '$t:admin.users.form.status_options.active', value: 'active'}, {label: '$t:admin.users.form.status_options.inactive', value: 'inactive'}, {label: '$t:admin.users.form.status_options.blocked', value: 'blocked'}] ?? []}}"
-                                                        }
+                                                        },
+                                                        "actions": [
+                                                            {
+                                                                "type": "change",
+                                                                "handler": "setState",
+                                                                "params": {
+                                                                    "target": "local",
+                                                                    "form.status": "{{$event.target.value}}"
+                                                                }
+                                                            }
+                                                        ]
                                                     }
                                                 ]
                                             }
@@ -1551,7 +1562,7 @@
                                                                             "handler": "toast",
                                                                             "params": {
                                                                                 "type": "error",
-                                                                                "message": "{{error.message}}"
+                                                                                "message": "{{error.message ?? '$t:common.error_occurred'}}"
                                                                             }
                                                                         }
                                                                     ]
@@ -1571,7 +1582,7 @@
                                                                             "handler": "toast",
                                                                             "params": {
                                                                                 "type": "error",
-                                                                                "message": "{{error.message}}"
+                                                                                "message": "{{error.message ?? '$t:common.error_occurred'}}"
                                                                             }
                                                                         }
                                                                     ]
@@ -1862,7 +1873,7 @@
                                                                 "handler": "toast",
                                                                 "params": {
                                                                     "type": "error",
-                                                                    "message": "{{error.message}}"
+                                                                    "message": "{{error.message ?? '$t:common.error_occurred'}}"
                                                                 }
                                                             }
                                                         ]
@@ -1882,7 +1893,7 @@
                                                                 "handler": "toast",
                                                                 "params": {
                                                                     "type": "error",
-                                                                    "message": "{{error.message}}"
+                                                                    "message": "{{error.message ?? '$t:common.error_occurred'}}"
                                                                 }
                                                             }
                                                         ]
