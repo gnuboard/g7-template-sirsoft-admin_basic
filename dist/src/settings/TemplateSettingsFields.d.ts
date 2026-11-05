@@ -1,5 +1,5 @@
 import { default as React } from 'react';
-import { EditorAttrs } from '../../types';
+import { EditorAttrs } from '../types';
 /** 선택지 서술 */
 export interface TemplateSettingOption {
     value: string;

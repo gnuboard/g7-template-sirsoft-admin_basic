@@ -22,7 +22,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 
 const uploaderProps: Record<string, any>[] = [];
 
-vi.mock('../FileUploader', () => ({
+vi.mock('../../components/composite/FileUploader', () => ({
   FileUploader: (props: Record<string, any>) => {
     uploaderProps.push(props);
 
@@ -33,8 +33,8 @@ vi.mock('../FileUploader', () => ({
 // 언어 탭 시험만 실제 다국어 입력을 쓴다 — 나머지는 한 칸짜리 대역으로 둔다
 const multilingualMode = vi.hoisted(() => ({ real: false }));
 
-vi.mock('../MultilingualInput', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../MultilingualInput')>();
+vi.mock('../../components/composite/MultilingualInput', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../components/composite/MultilingualInput')>();
 
   return {
     ...actual,
@@ -154,7 +154,7 @@ describe('TemplateSettingsFields (#434)', () => {
     const onChange = vi.fn();
     const { rerender } = render(<TemplateSettingsFields sections={sections} value={value} onChange={onChange} />);
 
-    fireEvent.click(screen.getByText(/admin.template_settings_fields.add_item|Add/));
+    fireEvent.click(screen.getByText(/settings.screen.fields.add_item|Add/));
     const added = onChange.mock.lastCall[0].header.links;
     expect(added).toHaveLength(2);
     expect(added[1]).toEqual({ label: {}, url: '' });
@@ -162,7 +162,7 @@ describe('TemplateSettingsFields (#434)', () => {
     const two = { ...value, header: { ...value.header, links: [{ label: { ko: 'A' }, url: '/a' }, { label: { ko: 'B' }, url: '/b' }] } };
     rerender(<TemplateSettingsFields sections={sections} value={two} onChange={onChange} />);
 
-    expect((screen.getByText(/admin.template_settings_fields.add_item|Add/).closest('button') as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByText(/settings.screen.fields.add_item|Add/).closest('button') as HTMLButtonElement).disabled).toBe(true);
 
     fireEvent.click(screen.getAllByLabelText('Move down')[0]);
     expect(onChange.mock.lastCall[0].header.links.map((row: any) => row.url)).toEqual(['/b', '/a']);
@@ -189,7 +189,7 @@ describe('TemplateSettingsFields (#434)', () => {
     expect((screen.getByLabelText('게시판 개수') as HTMLInputElement).disabled).toBe(true);
     expect(uploaderProps.every((p) => p.disabled === true)).toBe(true);
     expect(screen.queryByLabelText('Remove')).toBeNull();
-    expect(screen.queryByText(/admin.template_settings_fields.add_item|Add/)).toBeNull();
+    expect(screen.queryByText(/settings.screen.fields.add_item|Add/)).toBeNull();
   });
 
   // @scenario case=settings_layout

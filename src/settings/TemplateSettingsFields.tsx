@@ -1,9 +1,10 @@
 /**
- * TemplateSettingsFields — 템플릿 설정 공용 화면의 칸 그리기 (#434)
+ * TemplateSettingsFields — sirsoft-admin_basic 설정 화면의 칸 그리기 (#434)
  *
- * 템플릿이 설정 화면을 직접 쓰지 않으면 이 관리자 템플릿의 공용 화면(`admin_template_settings`)이 그린다. 화면 틀(제목·안내·
- * 저장 바·이탈 경고)은 레이아웃이 맡고, 이 컴포넌트는 조회 응답의 섹션 서술(`sections`)대로 섹션마다 카드 하나, 칸마다
- * 종류별 입력을 그린다. 칸마다 다른 경로(`{섹션}.{키}`)에 쓰는 동적 바인딩이라 선언형 레이아웃 대신 컴포넌트로 둔다.
+ * 이 템플릿 설정 화면 부품(`TemplateSettingsScreen`)이 쓴다 — 설정 화면 묶음(`dist/settings/*`)에 함께 묶여 다른 관리자 템플릿
+ * 화면에서도 뜬다. 조회 응답의 섹션 서술(`sections`)대로 섹션마다 카드 하나, 칸마다 종류별 입력을 그린다. 칸마다 다른
+ * 경로(`{섹션}.{키}`)에 쓰는 동적 바인딩이라 선언형 레이아웃 대신 컴포넌트로 둔다. 이 템플릿이 선언하지 않는 칸 종류
+ * (메뉴 등)는 그리지 않는다 — 칸 종류 부품은 그 칸을 선언한 템플릿이 자기 화면에 공급한다(#434 D28).
  *
  * - 값은 섹션 중첩 객체(`{섹션: {키: 값}}`)이고, 바뀌면 폼 전체를 `onChange(next)` 로 올린다. 업로더 여러 개가 연달아
  *   끝나도 앞 결과가 덮이지 않게 최신 값을 ref 로 이어 붙인다.
@@ -13,25 +14,26 @@
  */
 
 import React, { useCallback, useEffect, useRef } from 'react';
-import { Div } from '../basic/Div';
-import { Span } from '../basic/Span';
-import { Button } from '../basic/Button';
-import { Icon } from '../basic/Icon';
-import { Input } from '../basic/Input';
-import { Select } from '../basic/Select';
-import { Textarea } from '../basic/Textarea';
-import { Label } from '../basic/Label';
-import { P } from '../basic/P';
-import { H3 } from '../basic/H3';
-import { Toggle } from './Toggle';
-import { RadioGroup } from './RadioGroup';
-import { MultilingualInput } from './MultilingualInput';
-import { FileUploader } from './FileUploader';
-import type { EditorAttrs } from '../../types';
+import { Div } from '../components/basic/Div';
+import { Span } from '../components/basic/Span';
+import { Button } from '../components/basic/Button';
+import { Icon } from '../components/basic/Icon';
+import { Input } from '../components/basic/Input';
+import { Select } from '../components/basic/Select';
+import { Textarea } from '../components/basic/Textarea';
+import { Label } from '../components/basic/Label';
+import { P } from '../components/basic/P';
+import { H3 } from '../components/basic/H3';
+import { Toggle } from '../components/composite/Toggle';
+import { RadioGroup } from '../components/composite/RadioGroup';
+import { MultilingualInput } from '../components/composite/MultilingualInput';
+import { FileUploader } from '../components/composite/FileUploader';
+import type { EditorAttrs } from '../types';
+import { translate } from '../utils/translate';
 
 // G7Core.t() 번역 함수 참조 — 엔진 밖(단위 테스트)이면 대체 문구를 쓴다
 const t = (key: string, fallback: string, params?: Record<string, string | number>): string => {
-  const translated = (window as any).G7Core?.t?.(key, params);
+  const translated = translate(key, params);
 
   return typeof translated === 'string' && translated !== key ? translated : fallback;
 };
@@ -306,16 +308,16 @@ export const TemplateSettingsFields: React.FC<TemplateSettingsFieldsProps> = ({
         {rows.map((row, index) => (
           <Div key={index} className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 space-y-3" data-ref="template_settings_list_row">
             <Div className="flex items-center justify-between">
-              <Span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('admin.template_settings_fields.row_title', `#${index + 1}`, { number: index + 1 })}</Span>
+              <Span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.screen.fields.row_title', `#${index + 1}`, { number: index + 1 })}</Span>
               {!disabled && (
                 <Div className="flex items-center gap-1">
-                  <Button type="button" className="btn btn-ghost btn-sm" aria-label={t('admin.template_settings_fields.move_up', 'Move up')} disabled={index === 0} onClick={() => move(index, -1)}>
+                  <Button type="button" className="btn btn-ghost btn-sm" aria-label={t('settings.screen.fields.move_up', 'Move up')} disabled={index === 0} onClick={() => move(index, -1)}>
                     <Icon name="arrow-up" />
                   </Button>
-                  <Button type="button" className="btn btn-ghost btn-sm" aria-label={t('admin.template_settings_fields.move_down', 'Move down')} disabled={index === rows.length - 1} onClick={() => move(index, 1)}>
+                  <Button type="button" className="btn btn-ghost btn-sm" aria-label={t('settings.screen.fields.move_down', 'Move down')} disabled={index === rows.length - 1} onClick={() => move(index, 1)}>
                     <Icon name="arrow-down" />
                   </Button>
-                  <Button type="button" className="btn btn-ghost btn-sm" aria-label={t('admin.template_settings_fields.remove_item', 'Remove')} onClick={() => change(rows.filter((_, i) => i !== index))}>
+                  <Button type="button" className="btn btn-ghost btn-sm" aria-label={t('settings.screen.fields.remove_item', 'Remove')} onClick={() => change(rows.filter((_, i) => i !== index))}>
                     <Icon name="trash" />
                   </Button>
                 </Div>
@@ -345,10 +347,10 @@ export const TemplateSettingsFields: React.FC<TemplateSettingsFieldsProps> = ({
             onClick={() => change([...rows, Object.fromEntries(itemFields.map((itemField) => [itemField.key, itemField.type === 'boolean' ? false : itemField.type === 'multilingual' ? {} : '']))])}
           >
             <Icon name="plus" />
-            <Span>{t('admin.template_settings_fields.add_item', 'Add', { current: rows.length, max: maxItems })}</Span>
+            <Span>{t('settings.screen.fields.add_item', 'Add', { current: rows.length, max: maxItems })}</Span>
           </Button>
         )}
-        {rows.length >= maxItems && <P className="form-hint">{t('admin.template_settings_fields.max_items_reached', `Up to ${maxItems}`, { max: maxItems })}</P>}
+        {rows.length >= maxItems && <P className="form-hint">{t('settings.screen.fields.max_items_reached', `Up to ${maxItems}`, { max: maxItems })}</P>}
       </Div>
     );
   };
@@ -365,6 +367,7 @@ export const TemplateSettingsFields: React.FC<TemplateSettingsFieldsProps> = ({
             <Div className="space-y-5">
               {section.fields.filter((field) => isVisible(field, sectionValue)).map((field) => {
                 const path = `${section.key}.${field.key}`;
+                // 메뉴 칸의 항목 오류(`{칸}.{i}…`)는 편집기가 그 항목에 단다 — 여기는 칸 전체 오류만
                 const error = errorAt(errors, path) ?? errorAt(errors, `${path}.0`);
 
                 return (
